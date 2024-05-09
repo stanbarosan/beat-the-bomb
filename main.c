@@ -33,6 +33,7 @@ void CellRevealed(int, int);
 
 int main()
 {
+
     //resetare random
     srand(time(0));
 
@@ -45,9 +46,26 @@ int main()
              grid[i][j]= (Cell)
                      {
                         .x=i,
-                        .y=j
+                        .y=j,
+                        .Mine=false,
+                        .revealed=false
                      };
         }
+
+    }
+
+    int placeMines=10;
+    while(placeMines>0)
+    {
+        int i=rand()%COLS;
+        int j=rand()%ROWS;
+
+        if(grid[i][j].Mine==false)
+        {
+            grid[i][j].Mine=true;
+            placeMines--;
+        }
+
 
     }
 
@@ -63,15 +81,18 @@ int main()
             int indexX=mPos.x/cellsWidth;
             int indexY=mPos.y/cellsHeight;
 
-            if(IndexIsValid(indexX, indexY))
+            if(IndexIsValid(indexX, indexY)==true)
             {
                 CellRevealed(indexX,indexY);
+
             }
+
 
         }
 
         //desenez grid-ul
         BeginDrawing();
+
         ClearBackground(RAYWHITE);
             for(int i=0;i<COLS;i++)
             {
@@ -97,13 +118,21 @@ int main()
 //desenez o celula
 void CellDraw(Cell cell)
 {
+    if(cell.revealed==true)
+    {
+        if(cell.Mine==true)
+            DrawRectangleLines(cell.x*cellsWidth, cell.y*cellsHeight, cellsWidth, cellsHeight, RED);
+        else
+            DrawRectangleLines(cell.x*cellsWidth, cell.y*cellsHeight, cellsWidth, cellsHeight, LIGHTGRAY);
+    }
+    else
     DrawRectangleLines(cell.x*cellsWidth, cell.y*cellsHeight, cellsWidth, cellsHeight, BLACK);
 
 }
 
 
 //verifica daca mouse-ul este pe o celula
-bool IndexIsVaid(int x, int y)
+bool IndexIsValid(int x, int y)
 {
     return x>=0 && x< COLS && y>=0 && y<ROWS;
 }
@@ -115,10 +144,14 @@ void CellRevealed(int x, int y)
     if(grid[x][y].Mine==true)
     {
         //lose
+        DrawRectangleLines(x*cellsWidth, y*cellsHeight, cellsWidth, cellsHeight, RED);
     }
     else
     {
-        //continue
+
+        //schimb culoarea celulei
+        DrawRectangleLines(x*cellsWidth, y*cellsHeight, cellsWidth, cellsHeight, LIGHTGRAY);
+
     }
 
 }
