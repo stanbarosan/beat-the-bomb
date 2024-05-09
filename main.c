@@ -1,442 +1,124 @@
-#include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+
 #include "raylib.h"
+#include "raymath.h"
 
-#if defined(PLATFORM_WEB)
-#include <emscripten/emscripten.h>
-#endif
-
-
-#define FLUSH fflush(stdin)
-
-void difficulty( void );
-void beginner( void );
-void intermediate( void );
-void expert( void );
-void minefield_generator( void );
-void print_minefield( void );
-void guess( void );
-void boom( void );
-void print_final_minefield( void );
-void win( void );
-void play_again( void );
-void game_over( void );
-
-int x, y;
-int M, N;
-float diff;
-int total_mines = 0;
-int mines = 0;
-int minefield[30][30];                                      //This 2-D array contains all of the mines, numbers and blank spaces
-int blank_minefield[30][30];                                //This contains the minefield full of '|-|' characters
-int final_minefield[30][30];
+#define COLS 10
+#define ROWS 10
 
 
-static const int screenWidth = 800;
-static const int screenHeight = 450;
 
-static void InitGame(void);         // Initialize game
-static void UpdateGame(void);       // Update game (one frame)
-static void DrawGame(void);         // Draw game (one frame)
-static void UnloadGame(void);       // Unload game
-static void UpdateDrawFrame(void);  // Update and Draw (one frame)
+const int screenWidth=800;
+const int screenHeight = 480;
 
-int main(void)
+//auxiliare
+
+const int cellsWidth=screenWidth/COLS;
+const int cellsHeight=screenHeight/ROWS;
+
+typedef struct Cell
 {
-    // Initialization
-    //---------------------------------------------------------
-    InitWindow(screenWidth, screenHeight, "Beat The Bomb");
+    int x;
+    int y;
+    bool Mine;
+    bool revealed;
+}Cell;
 
-    InitGame();
+Cell grid[COLS][ROWS];
 
-#if defined(PLATFORM_WEB)
-    emscripten_set_main_loop(UpdateDrawFrame, 60, 1);
-#else
-    SetTargetFPS(60);
-    //--------------------------------------------------------------------------------------
+void CellDraw(Cell);
+bool IndexIsValid(int,int);
+void CellRevealed(int, int);
 
-    // Main game loop
-    while (!WindowShouldClose())    // Detect window close button or ESC key
-    {
-        // Update and Draw
-        //----------------------------------------------------------------------------------
-        UpdateDrawFrame();
-        //----------------------------------------------------------------------------------
-    }
-#endif
-    // De-Initialization
-    //--------------------------------------------------------------------------------------
-    UnloadGame();         // Unload loaded data (textures, sounds, models...)
-
-    CloseWindow();        // Close window and OpenGL context
-    //--------------------------------------------------------------------------------------
-
-    return 0;
-}
-
-void InitGame(void)
-{
-    printf("\t\tWelcome to Minesweeper\n");
-    DrawText(TextFormat("Welcome to Beat The Bomb"), 20, 20, 40, GRAY);
-    difficulty();
-
-}
-
-
-/*
 int main()
 {
-    printf("\t\tWelcome to Minesweeper\n");
-    difficulty();
+    //resetare random
+    srand(time(0));
+
+    InitWindow(screenWidth, screenHeight, "Raylib Template");
+
+    for(int i=0;i<COLS;i++)
+    {
+        for(int j =0; j<ROWS; j++)
+        {
+             grid[i][j]= (Cell)
+                     {
+                        .x=i,
+                        .y=j
+                     };
+        }
+
+    }
+
+
+
+    while (!WindowShouldClose())
+    {
+
+        //input mouse
+        if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
+        {
+            Vector2 mPos = GetMousePosition();
+            int indexX=mPos.x/cellsWidth;
+            int indexY=mPos.y/cellsHeight;
+
+            if(IndexIsValid(indexX, indexY))
+            {
+                CellRevealed(indexX,indexY);
+            }
+
+        }
+
+        //desenez grid-ul
+        BeginDrawing();
+        ClearBackground(RAYWHITE);
+            for(int i=0;i<COLS;i++)
+            {
+                for(int j =0; j<ROWS; j++)
+                {
+                    CellDraw(grid[i][j]);
+                }
+
+            }
+
+
+
+        EndDrawing();
+
+
+    }
+
+    CloseWindow();
+
     return 0;
 }
-*/
-void difficulty( void )                                     //Function for choosing the difficulty level
+
+//desenez o celula
+void CellDraw(Cell cell)
 {
-    diff = 0;
-    while( (diff != 1) && (diff != 2) && (diff != 3) && (diff != 4))
-    {
-        printf("\t\tChoose a difficulty level(1-3) or 4 for a custom game:");
-        scanf("%f", &diff);
-        FLUSH;
-        if( (diff != 1) && (diff != 2) && (diff != 3) && (diff != 4))
-        {
-            printf("\t\tPlease enter either 1, 2, 3 or 4\n");
-        }
-    }
+    DrawRectangleLines(cell.x*cellsWidth, cell.y*cellsHeight, cellsWidth, cellsHeight, BLACK);
 
-    if( diff == 1 )                                         //If, else if and else statements that each go to the respective difficulty
-    {
-        beginner();
-    }
-    else if( diff == 2 )
-    {
-        intermediate();
-    }
-    else if( diff == 3 )
-    {
-        expert();
-    }
-    else if( diff == 4)
-    {
-        custom();
-    }
-}
-
-void beginner( void )                                       //Gives the minefield the 'beginner' grid and mines
-{
-    M = 9;
-    N = 9;
-    total_mines = 10;
-    minefield_generator();
-    guess();
-}
-
-void intermediate( void )                                   //Gives the minefield the 'intermediate' grid and mines
-{
-    M = 16;
-    N = 16;
-    total_mines = 40;
-    minefield_generator();
-    guess();
-}
-
-void expert( void )                                         //Gives the minefield the 'expert' grid size and mines
-{
-    M = 16;
-    N = 30;
-    total_mines = 99;
-    minefield_generator();
-    guess();
-}
-
-void custom( void )
-{
-    M = 0;
-    N = 0;
-    total_mines = 0;
-    printf("\t\tPlease enter the size of the dimensions you want\n");
-    printf("\t\tFirst value:\n");
-    scanf("%d", &M);
-    printf("\t\tSecond value:\n");
-    scanf("%d", &N);
-    printf("\t\tNumber of mines you want to assign to the board:\n");
-    scanf("%d", &total_mines);
-    minefield_generator();
-    guess();
-}
-
-void minefield_generator( void )                            //Function that generates the minefield
-{
-    int i = 0, j = 0;
-
-    srand( time( NULL ) );                                  //Starts the random no. generator
-
-    while( j < N )                                          //Nested loop for making the blank minefield and final minefield
-    {
-        while( i < M)
-        {
-            minefield[i][j] = '-';
-            blank_minefield[i][j] = minefield[i][j];
-            final_minefield[i][j] = minefield[i][j];
-            i++;
-        }
-        i = 0;
-        j++;
-    }
-    mines = 0;
-    while( mines < total_mines )                            //Randomly generates the mines into the minefield
-    {
-        i = rand()%(M);
-        j = rand()%(N);
-        if( minefield[i][j] != '*')                         //If statement that checks if there is a mine already there and doesn't place a mine if there is
-        {
-            minefield[i][j] = '*';
-            final_minefield[i][j] = minefield[i][j];
-            mines++;
-        }
-    }
-    i = 0;
-    j = 0;
-
-    while( j < N )                                          //While loop that generates the numbers for any adjacent mines
-    {
-        while( i < M)
-        {
-            if( minefield[i][j] != '*')
-            {
-                minefield[i][j] = 0;
-            }
-            if((minefield[i-1][j-1] == '*') && (minefield[i][j] != '*'))
-            {
-                minefield[i][j]++;
-            }
-            if((minefield[i-1][j] == '*') && (minefield[i][j] != '*'))
-            {
-                minefield[i][j]++;
-            }
-            if((minefield[i][j-1] == '*') && (minefield[i][j] != '*'))
-            {
-                minefield[i][j]++;
-            }
-            if((minefield[i-1][j+1] == '*') && (minefield[i][j] != '*'))
-            {
-                minefield[i][j]++;
-            }
-            if((minefield[i+1][j-1] == '*') && (minefield[i][j] != '*'))
-            {
-                minefield[i][j]++;
-            }
-            if((minefield[i+1][j] == '*') && (minefield[i][j] != '*'))
-            {
-                minefield[i][j]++;
-            }
-            if((minefield[i][j+1] == '*') && (minefield[i][j] != '*'))
-            {
-                minefield[i][j]++;
-            }
-            if((minefield[i+1][j+1] == '*') && (minefield[i][j] != '*'))
-            {
-                minefield[i][j]++;
-            }
-            i++;
-        }
-        i = 0;
-        j++;
-    }
-    i = 0;
-    j = 0;
-}
-
-void print_minefield(void)                                  // This function prints the minefield
-{
-    int i = 0, j = 0, z = 0;
-    while( z < M )                                          // This while loop prints out the line of co-ordinates along the x axis of the minefield
-    {
-        if( z == 0 )
-        {
-            printf("\t");
-        }
-        printf("|%d|\t", z);
-        z++;
-    }
-    printf("\n\n");
-
-    while( j < N )                                          // Loop that prints out each character in the minefield
-    {
-        printf("|%d|\t", j);
-        while( i < M)
-        {
-            if( blank_minefield[i][j] == '-')
-            {
-                printf("|%c|\t", blank_minefield[i][j]);
-
-            }
-            else if( minefield[i][j] == 0 )                 // This changes any spaces with values of zero to the character 'B'
-            {
-                blank_minefield[i][j] = 'B';
-                printf("|%c|\t", blank_minefield[i][j]);
-            }
-            else
-            {
-                printf("|%d|\t", blank_minefield[i][j]);
-
-            }
-            i++;
-        }
-        printf("\n");
-        i = 0;
-        j++;
-    }
 }
 
 
-void guess( void )
+//verifica daca mouse-ul este pe o celula
+bool IndexIsVaid(int x, int y)
 {
-    int q = 0, i=0, j=0, match=0;
-    print_minefield();
-    while( j < N )                                          // While loop for testing whether or not the user has cleared the minefield
-    {
-        while( i < M )
-        {
-            if(minefield[i][j] == blank_minefield[i][j])
-            {
-                match++;
-            }
-            i++;
-        }
-        i = 0;
-        j++;
-    }
-    if( match == (( M * N ) - total_mines))                 // If the user has cleared the minefield, the win() function is run
-    {
-        win();
-    }
-    printf("\nEnter the x value, then a space, then the y value:");
-    scanf("%d %d", &x, &y);                                 // Reading in the co-ordinates for the guess
-    FLUSH;
-    if( (x >= M) || (x < 0) || (y < 0) || (y >= N) )
-    {
-        printf("\nPlease enter a value inside the grid\n");
-        guess();
-    }
-    if( minefield[x][y] == '*' )                            // Runs the boom() function if the user selects a mine
-    {
-        boom();
-    }
-    if( blank_minefield[x][y] != '-' )
-    {
-        printf("\nPlease enter a value that has not already been entered\n");
-        guess();
-    }
-
-    else                                                // Checks if the adjacent spaces are blank, then changes the values in the blank_minefield array. Because they are changed, they will now print out in the print_minefield function
-    {
-        blank_minefield[x][y] = minefield[x][y];
-        if( minefield[x][y] == 0 )
-        {
-            if( minefield[x-1][y-1] == 0 )
-            {
-                blank_minefield[x-1][y] = minefield[x-1][y];
-            }
-            if( minefield[x-1][y] == 0 )
-            {
-                blank_minefield[x-1][y] = minefield[x-1][y];
-            }
-            if( minefield[x][y-1] == 0 )
-            {
-                blank_minefield[x][y-1] = minefield[x][y-1];
-            }
-            if( minefield[x-1][y+1] == 0 )
-            {
-                blank_minefield[x-1][y+1] = minefield[x-1][y+1];
-            }
-            if( minefield[x+1][y-1] == 0 )
-            {
-                blank_minefield[x+1][y-1] = minefield[x+1][y-1];
-            }
-            if( minefield[x+1][y] == 0 )
-            {
-                blank_minefield[x+1][y] = minefield[x+1][y];
-            }
-            if( minefield[x][y+1] == 0 )
-            {
-                blank_minefield[x][y+1] = minefield[x][y+1];
-            }
-            if( minefield[x+1][y+1] == 0 )
-            {
-                blank_minefield[x+1][y+1] = minefield[x+1][y+1];
-            }
-        }
-        guess();
-    }
+    return x>=0 && x< COLS && y>=0 && y<ROWS;
 }
 
-void boom( void )                                       // Runs the print_final_minefield function, then the play_again function
+void CellRevealed(int x, int y)
 {
-    print_final_minefield();
-    printf("\n\t\tYou hit a mine at %d,%d\n\t\tYOU LOSE!!!!", x, y);
-    play_again();
-}
+    grid[x][y].revealed=true;
 
-void print_final_minefield( void )                      // Prints the minefield, showing where all of the mines are placed
-{
-    int i = 0, j = 0, z = 0;
-    while( z < M )
+    if(grid[x][y].Mine==true)
     {
-        if( z == 0 )
-        {
-            printf("\t");
-        }
-        printf("|%d|\t", z);
-        z++;
-    }
-    printf("\n\n");
-
-    while( j < N )
-    {
-        printf("|%d|\t", j);
-        while( i < M)
-        {
-            printf("|%c|\t", final_minefield[i][j]);
-            i++;
-        }
-        printf("\n");
-        i = 0;
-        j++;
-    }
-}
-
-void win( void )                                        // Runs the play_again function
-{
-    printf("\n\n\n\t\t\tYOU WIN!!!!!\n\n\n");
-    play_again();
-}
-
-void play_again( void )                                 // Gives the user the option to play again
-{
-    char option[2];
-    printf("\n\t\tWould you like to play again(Y/N)?:");
-    scanf("%c", &option[0]);
-    FLUSH;
-    if((option[0] == 'Y') || (option[0] == 'y'))        // Restarts the program from after the welcome message
-    {
-        difficulty();
-    }
-    else if( (option[0] == 'N') || (option[0] == 'n'))
-    {
-        game_over();
+        //lose
     }
     else
     {
-        printf("Please enter either Y or N");
-        play_again();
+        //continue
     }
-}
 
-void game_over( void )                                  // Ends the program
-{
-    printf("\n\n\t\tGame Over");
-    exit(1);
 }
