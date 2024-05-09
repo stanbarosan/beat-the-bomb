@@ -14,8 +14,8 @@ const int screenHeight = 800;
 
 //auxiliare
 
-const int cellsWidth=screenWidth/COLS;
-const int cellsHeight=screenHeight/ROWS;
+const int cellsWidth=screenWidth/(COLS);
+const int cellsHeight=screenHeight/(ROWS);
 
 typedef struct Cell
 {
@@ -32,6 +32,7 @@ void CellDraw(Cell);
 bool IndexIsValid(int,int);
 void CellRevealed(int, int);
 int CountMines(int, int);
+void border();
 
 int main()
 {
@@ -41,9 +42,9 @@ int main()
 
     InitWindow(screenWidth, screenHeight, "Raylib Template");
 
-    for(int i=0;i<COLS;i++)
+    for(int i=1;i<=COLS;i++)
     {
-        for(int j =0; j<ROWS; j++)
+        for(int j =1; j<=ROWS; j++)
         {
             grid[i][j]= (Cell)
                     {
@@ -74,10 +75,12 @@ int main()
 
     }
 
+    //bordarez grid-ul ca sa nu mai fie probleme la numararea bombelor
+    border();
 
-    for(int i=0;i<COLS;i++)
+    for(int i=1;i<=COLS;i++)
     {
-        for(int j =0; j<ROWS; j++)
+        for(int j =1; j<=ROWS; j++)
         {
             if(grid[i][j].Mine==false)
             {
@@ -96,8 +99,8 @@ int main()
         if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
         {
             Vector2 mPos = GetMousePosition();
-            int indexX=mPos.x/cellsWidth;
-            int indexY=mPos.y/cellsHeight;
+            int indexX=mPos.x/cellsWidth+1;
+            int indexY=(mPos.y)/cellsHeight+1;
 
             if(IndexIsValid(indexX, indexY)==true)
             {
@@ -112,9 +115,9 @@ int main()
         BeginDrawing();
 
         ClearBackground(RAYWHITE);
-        for(int i=0;i<COLS;i++)
+        for(int i=1;i<=COLS;i++)
         {
-            for(int j =0; j<ROWS; j++)
+            for(int j =1; j<=ROWS; j++)
             {
                 CellDraw(grid[i][j]);
             }
@@ -137,21 +140,21 @@ int main()
 //desenez o celula
 void CellDraw(Cell cell)
 {
-    DrawRectangleLines(cell.x*cellsWidth, cell.y*cellsHeight, cellsWidth, cellsHeight, BLACK);
+    DrawRectangleLines((cell.x-1)*cellsWidth, (cell.y-1)*cellsHeight, cellsWidth, cellsHeight, BLACK);
     if(cell.revealed==true)
     {
         if(cell.Mine==true)
         {
-            DrawRectangle(cell.x*cellsWidth, cell.y*cellsHeight, cellsWidth, cellsHeight, RED);
+            DrawRectangle((cell.x-1)*cellsWidth, (cell.y-1)*cellsHeight, cellsWidth, cellsHeight, RED);
 
         }
 
         else
         {
-            DrawRectangle(cell.x*cellsWidth, cell.y*cellsHeight, cellsWidth, cellsHeight, LIGHTGRAY);
+            DrawRectangle((cell.x-1)*cellsWidth, (cell.y-1)*cellsHeight, cellsWidth, cellsHeight, LIGHTGRAY);
 
             if(cell.adjMines!=0)
-            DrawText(TextFormat("%d",cell.adjMines),cell.x*cellsWidth + 6, cell.y*cellsHeight + 4 ,cellsHeight - 8,BLACK);
+            DrawText(TextFormat("%d",cell.adjMines),(cell.x-1)*cellsWidth + 6, (cell.y-1)*cellsHeight + 4 ,cellsHeight - 8,BLACK);
         }
 
     }
@@ -164,7 +167,7 @@ void CellDraw(Cell cell)
 //verifica daca mouse-ul este pe o celula
 bool IndexIsValid(int x, int y)
 {
-    return x>=0 && x< COLS && y>=0 && y<ROWS;
+    return x>=1 && x<= COLS && y>=1 && y<=ROWS;
 }
 
 void CellRevealed(int x, int y)
@@ -217,4 +220,17 @@ int CountMines(int x,int y)
         }
     }
 return count;
+}
+
+void border()
+{
+    for(int i=0;i<=COLS+1;i++)
+    {
+        for(int j=0;j<=ROWS+1;j++)
+        {
+            if(i==0 || j==0 || i==COLS+1 || j==ROWS+1)
+                grid[i][j].Mine=false;
+        }
+    }
+
 }
