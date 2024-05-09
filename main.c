@@ -34,13 +34,37 @@ int CountMines(int, int);
 void check0(int x, int y);
 void border();
 
+
+
+
 int main()
 {
+    //incarcare poze
+
+    Texture2D box,box1,box2,box3,box4,box5,box6,box7,box8,box0,bomb,flag;
+
+
+
+
 
     // resetare random
     srand(time(0));
 
     InitWindow(screenWidth, screenHeight, "Raylib Template");
+
+    box= LoadTexture("poze_minesweeper/box.png");
+    box1= LoadTexture("poze_minesweeper/box1.png");/*
+    box2= LoadTexture("poze_minesweeper/box2.png");
+    box3= LoadTexture("poze_minesweeper/box3.png");
+    box4= LoadTexture("poze_minesweeper/box4.png");
+    box5= LoadTexture("poze_minesweeper/box5.png");
+    box6= LoadTexture("poze_minesweeper/box6.png");
+    box7= LoadTexture("poze_minesweeper/box7.png");
+    box8= LoadTexture("poze_minesweeper/box8.png");
+    box0= LoadTexture("poze_minesweeper/box0.png");
+    bomb= LoadTexture("poze_minesweeper/bomb.png");
+    flag= LoadTexture("poze_minesweeper/flag.png");*/
+
 
     for (int i = 0; i <= COLS + 1; i++)
     {
@@ -109,15 +133,66 @@ int main()
             }
         }
 
+
+
+
         // desenez grid-ul
         BeginDrawing();
 
         ClearBackground(RAYWHITE);
+
+
+        //DrawTextureEx(box, (Vector2){ 50, 50},0,0.2f,WHITE);
+        //DrawTexture(box,0,0, WHITE);
+
+        //DrawTexture()
+
+
         for (int i = 1; i <= COLS; i++)
         {
             for (int j = 1; j <= ROWS; j++)
             {
-                CellDraw(grid[i][j]);
+                if(grid[i][j].revealed==false)
+                    DrawTextureEx(box, (Vector2){ (grid[i][j].x-1)*cellsWidth, (grid[i][j].y-1)*cellsHeight},0,0.07f,WHITE);
+                
+                
+                else
+                {
+                    if(grid[i][j].adjMines==1)
+                        DrawTextureEx(box1, (Vector2){ (grid[i][j].x-1)*cellsWidth, (grid[i][j].y-1)*cellsHeight},0,0.07f,WHITE);
+
+                    if(grid[i][j].adjMines==2)
+                        DrawTextureEx(box2, (Vector2){ (grid[i][j].x-1)*cellsWidth, (grid[i][j].y-1)*cellsHeight},0,0.07f,WHITE);
+
+                    if(grid[i][j].adjMines==3)
+                        DrawTextureEx(box3, (Vector2){ (grid[i][j].x-1)*cellsWidth, (grid[i][j].y-1)*cellsHeight},0,0.07f,WHITE);
+
+                    if(grid[i][j].adjMines==4)
+                        DrawTextureEx(box4, (Vector2){ (grid[i][j].x-1)*cellsWidth, (grid[i][j].y-1)*cellsHeight},0,0.07f,WHITE);
+
+                    if(grid[i][j].adjMines==5)
+                        DrawTextureEx(box5, (Vector2){ (grid[i][j].x-1)*cellsWidth, (grid[i][j].y-1)*cellsHeight},0,0.07f,WHITE);
+
+                    if(grid[i][j].adjMines==6)
+                        DrawTextureEx(box6, (Vector2){ (grid[i][j].x-1)*cellsWidth, (grid[i][j].y-1)*cellsHeight},0,0.07f,WHITE);
+
+                    if(grid[i][j].adjMines==7)
+                        DrawTextureEx(box7, (Vector2){ (grid[i][j].x-1)*cellsWidth, (grid[i][j].y-1)*cellsHeight},0,0.07f,WHITE);
+
+                    if(grid[i][j].adjMines==8)
+                        DrawTextureEx(box8, (Vector2){ (grid[i][j].x-1)*cellsWidth, (grid[i][j].y-1)*cellsHeight},0,0.07f,WHITE);
+
+                    if(grid[i][j].adjMines==0)
+                        DrawTextureEx(box0, (Vector2){ (grid[i][j].x-1)*cellsWidth, (grid[i][j].y-1)*cellsHeight},0,0.07f,WHITE);
+
+
+
+                }
+
+                        
+                        
+                //CellDraw(grid[i][j]);
+
             }
         }
 
@@ -133,6 +208,7 @@ int main()
 void CellDraw(Cell cell)
 {
     DrawRectangleLines((cell.x - 1) * cellsWidth, (cell.y - 1) * cellsHeight, cellsWidth, cellsHeight, BLACK);
+
     if (cell.revealed == true)
     {
         if (cell.Mine == true)
@@ -145,7 +221,10 @@ void CellDraw(Cell cell)
             DrawRectangle((cell.x - 1) * cellsWidth, (cell.y - 1) * cellsHeight, cellsWidth, cellsHeight, LIGHTGRAY);
 
             if (cell.adjMines != 0)
-                DrawText(TextFormat("%d", cell.adjMines), (cell.x - 1) * cellsWidth + 6, (cell.y - 1) * cellsHeight + 4, cellsHeight - 8, BLACK);
+                //DrawText(TextFormat("%d", cell.adjMines), (cell.x - 1) * cellsWidth + 6, (cell.y - 1) * cellsHeight + 4, cellsHeight - 8, BLACK);
+                if(cell.adjMines==1){
+
+                }
         }
     }
 }
@@ -163,7 +242,11 @@ void CellRevealed(int x, int y)
     if (grid[x][y].Mine == true)
     {
         // lose
-        DrawRectangle(x * cellsWidth, y * cellsHeight, cellsWidth, cellsHeight, RED);
+        for(int i=1;i<=ROWS;i++){
+            for(int j=1;j<=COLS;j++){
+                grid[i][j].revealed=true;
+            }
+        }
     }
     else
     {
