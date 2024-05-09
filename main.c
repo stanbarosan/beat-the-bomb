@@ -9,7 +9,7 @@
 const int screenWidth = 800;
 const int screenHeight = 800;
 
-// auxiliare
+// Cells
 const int cellsWidth = screenWidth / (COLS);
 const int cellsHeight = screenHeight / (ROWS);
 
@@ -21,7 +21,7 @@ typedef struct Cell
     bool revealed;
     bool checked;
     int adjMines;
-    bool flaged;
+    bool flagged;
 } Cell;
 
 Cell grid[COLS + 1][ROWS + 1];
@@ -34,15 +34,15 @@ void border();
 
 int main()
 {
-    int MINESNUMBER;
-    InitWindow(screenWidth, screenHeight, "Raylib Template");
+    int numberOfMines = 15;
+    InitWindow(screenWidth, screenHeight, "Beat The Bomb");
 
-// START
-    play:
-    //  resetare random
-    srand(time(0));
+    // START
+    StartNewGame:
+    //  Reset Random Generator
+    srand((unsigned)time(NULL));
 
-    // incarcare textures
+    // Loading Textures
 
     Texture2D bombTexture = LoadTexture("C:\\Users\\Serban\\CLionProjects\\untitled\\beat the bomb\\textures\\bomb.png");
     if (bombTexture.id == 0)
@@ -152,91 +152,90 @@ int main()
     {
         printf("Failed to load texture!\n");
         CloseWindow();
-        return 13;
+        return 14;
     }
     Texture2D difficultyMenu = LoadTexture("C:\\Users\\Serban\\CLionProjects\\untitled\\beat the bomb\\textures\\difficulty.png");
     if (difficultyMenu.id == 0)
     {
         printf("Failed to load texture!\n");
         CloseWindow();
-        return 13;
+        return 15;
     }
-    // start menu
+    Texture2D youLoseMenu = LoadTexture("C:\\Users\\Serban\\CLionProjects\\untitled\\beat the bomb\\textures\\youlosemenu.png");
+    if (youLoseMenu.id == 0)
+    {
+        printf("Failed to load texture!\n");
+        CloseWindow();
+        return 16;
+    }
+    Texture2D youWinMenu = LoadTexture("C:\\Users\\Serban\\CLionProjects\\untitled\\beat the bomb\\textures\\youwinmenu.png");
+    if (youWinMenu.id == 0)
+    {
+        printf("Failed to load texture!\n");
+        CloseWindow();
+        return 17;
+    }
+    // Start Menu
     bool start = false;
-    bool optionsMenu = false;
+    bool isOptionsMenuOpen = false;
     while (start != true)
     {
 
         BeginDrawing();
         ClearBackground(RAYWHITE);
-        if (optionsMenu == false)
+        if (isOptionsMenuOpen == false)
         {
             ClearBackground(RAYWHITE);
         }
-        if (optionsMenu == false)
+        if (isOptionsMenuOpen == false)
         {
             DrawTextureEx(startMenu, (Vector2){0, 0}, 0, 0.75f, WHITE);
         }
-        // play game
-        if (IsKeyPressed(KEY_P) && optionsMenu == false)
+        // Play Game (Start)
+        if (IsKeyPressed(KEY_P) && isOptionsMenuOpen == false)
         {
             start = true;
             break;
         }
-        // quit game
-        if (IsKeyPressed(KEY_Q) && optionsMenu == false)
+        // Quit Game
+        if (IsKeyPressed(KEY_Q) && isOptionsMenuOpen == false)
         {
-            WindowShouldClose();
-            UnloadTexture(boxTexture);
-            UnloadTexture(box0Texture);
-            UnloadTexture(box1Texture);
-            UnloadTexture(box2Texture);
-            UnloadTexture(box3Texture);
-            UnloadTexture(box4Texture);
-            UnloadTexture(box5Texture);
-            UnloadTexture(box6Texture);
-            UnloadTexture(box7Texture);
-            UnloadTexture(box8Texture);
-            UnloadTexture(flagTexture);
-            UnloadTexture(bombTexture);
-            UnloadTexture(startMenu);
-            UnloadTexture(difficultyMenu);
-            return 0;
+            goto QuitGame;
         }
-        // options menu
-        if (IsKeyPressed(KEY_O) || optionsMenu == true)
+        // Options Menu (Difficulties)
+        if (IsKeyPressed(KEY_O) || isOptionsMenuOpen == true)
         {
-            optionsMenu = true;
+            isOptionsMenuOpen = true;
             DrawTextureEx(difficultyMenu, (Vector2){0, 0}, 0, 1.4f, WHITE);
             if (IsKeyPressed(KEY_V))
             {
-                MINESNUMBER = 7;
-                optionsMenu = false;
+                numberOfMines = 7;
+                isOptionsMenuOpen = false;
             }
             if (IsKeyPressed(KEY_E))
             {
-                MINESNUMBER = 10;
-                optionsMenu = false;
+                numberOfMines = 10;
+                isOptionsMenuOpen = false;
             }
             if (IsKeyPressed(KEY_N))
             {
-                MINESNUMBER = 15;
-                optionsMenu = false;
+                numberOfMines = 15;
+                isOptionsMenuOpen = false;
             }
             if (IsKeyPressed(KEY_H))
             {
-                MINESNUMBER = 23;
-                optionsMenu = false;
+                numberOfMines = 23;
+                isOptionsMenuOpen = false;
             }
             if (IsKeyPressed(KEY_I))
             {
-                MINESNUMBER = 30;
-                optionsMenu = false;
+                numberOfMines = 30;
+                isOptionsMenuOpen = false;
             }
         }
         EndDrawing();
     }
-    // initializare griduri
+    // Creating the Grids
     for (int i = 0; i <= COLS + 1; i++)
     {
         for (int j = 0; j <= ROWS + 1; j++)
@@ -254,12 +253,12 @@ int main()
                     .Mine = false,
                     .revealed = false,
                     .checked = false,
-                    .flaged = false};
+                    .flagged = false};
         }
     }
-    // localizare mine
-    int placeMines = MINESNUMBER;
-    while (placeMines > 0)
+    // Placing The Mines
+    int minesToPlace = numberOfMines;
+    while (minesToPlace > 0)
     {
         int i = 0;
         int j = 0;
@@ -272,11 +271,11 @@ int main()
         {
             grid[i][j].Mine = true;
             grid[i][j].adjMines = 1;
-            placeMines--;
+            minesToPlace--;
         }
     }
 
-    // bordare grid
+    // Grid Border
     border();
 
     for (int i = 1; i <= COLS; i++)
@@ -289,38 +288,39 @@ int main()
             }
         }
     }
-    // jocul propriu zis
+
+    // Game Interface
     while (!WindowShouldClose())
     {
-        // input mouse
-        // click casuta
+        // Mouse Input
+        // Click on cell
         if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
         {
-            Vector2 mPos = GetMousePosition();
-            int indexX = mPos.x / cellsWidth + 1;
-            int indexY = mPos.y / cellsHeight + 1;
-            if (IndexIsValid(indexX, indexY) == true)
+            Vector2 mousePosition = GetMousePosition();
+            int cellIndexX = mousePosition.x / cellsWidth + 1;
+            int cellIndexY = mousePosition.y / cellsHeight + 1;
+            if (IndexIsValid(cellIndexX, cellIndexY) == true)
             {
-                check0(indexX, indexY);
-                CellRevealed(indexX, indexY);
+                check0(cellIndexX, cellIndexY);
+                CellRevealed(cellIndexX, cellIndexY);
             }
         }
-        // stegulet
+        // Flags
         if (IsMouseButtonPressed(MOUSE_BUTTON_RIGHT))
         {
-            Vector2 mPos = GetMousePosition();
-            int indexX = mPos.x / cellsWidth + 1;
-            int indexY = mPos.y / cellsHeight + 1;
-            if (IndexIsValid(indexX, indexY) == true && grid[indexX][indexY].flaged == false)
+            Vector2 mousePosition = GetMousePosition();
+            int cellIndexX = mousePosition.x / cellsWidth + 1;
+            int cellIndexY = mousePosition.y / cellsHeight + 1;
+            if (IndexIsValid(cellIndexX, cellIndexY) == true && grid[cellIndexX][cellIndexY].flagged == false)
             {
-                grid[indexX][indexY].flaged = true;
+                grid[cellIndexX][cellIndexY].flagged = true;
             }
-            else if (IndexIsValid(indexX, indexY) == true && grid[indexX][indexY].flaged == true)
+            else if (IndexIsValid(cellIndexX, cellIndexY) == true && grid[cellIndexX][cellIndexY].flagged == true)
             {
-                grid[indexX][indexY].flaged = false;
+                grid[cellIndexX][cellIndexY].flagged = false;
             }
         }
-        // desenarea gridului
+        // Grids Draw
         BeginDrawing();
         ClearBackground(RAYWHITE);
         for (int i = 1; i <= COLS; i++)
@@ -368,49 +368,69 @@ int main()
                 if (grid[i][j].revealed == false)
                 {
                     DrawTextureEx(boxTexture, (Vector2){((float)(grid[i][j].x - 1)) * cellsWidth, ((float)(grid[i][j].y - 1)) * cellsHeight}, 0, 0.065f, WHITE);
-                    if (grid[i][j].flaged == true)
+                    if (grid[i][j].flagged == true)
                     {
                         DrawTextureEx(flagTexture, (Vector2){((float)(grid[i][j].x - 1)) * cellsWidth, ((float)(grid[i][j].y - 1)) * cellsHeight}, 0, 0.07f, WHITE);
                     }
                 }
             }
         }
-        // win/lose check
-        int bombs_flagged = 0;
-        bool all_revealed = true;
+        // Win or Lose check
+        int flaggedBombsCount = 0;
+        bool allCellsRevealed = true;
+        bool allSafeCellsRevealed = true;
+
         for (int i = 1; i <= COLS; i++)
         {
             for (int j = 1; j <= ROWS; j++)
             {
                 if (grid[i][j].revealed == false)
                 {
-                    all_revealed = false;
+                    allCellsRevealed = false;
                 }
-                if (grid[i][j].Mine == true && grid[i][j].flaged == true)
+                if (grid[i][j].revealed == false && grid[i][j].Mine == false)
                 {
-                    bombs_flagged++;
+                    allSafeCellsRevealed = false;
+                }
+                if (grid[i][j].Mine == true && grid[i][j].flagged == true)
+                {
+                    flaggedBombsCount++;
                 }
             }
         }
-        // lose
-        if (all_revealed == true && IsKeyPressed(KEY_K))
-        {
-            goto play;
-        }
         // win
-        bool win = false;
-        if (bombs_flagged == MINESNUMBER)
+        if (flaggedBombsCount == numberOfMines && allSafeCellsRevealed == true)
         {
-            win = true;
+            DrawTextureEx(youWinMenu, (Vector2){0, 0}, 0, 0.75f, WHITE);
+            if (IsKeyPressed(KEY_Q))
+            {
+                goto QuitGame;
+            }
+            if (IsKeyPressed(KEY_T))
+            {
+                goto StartNewGame;
+            }
         }
-        if (win == true && IsKeyPressed(KEY_K))
+
+        // lose
+        if (allCellsRevealed == true)
         {
-            goto play;
+            DrawTextureEx(youLoseMenu, (Vector2){0, 0}, 0, 0.4f, WHITE);
+            if (IsKeyPressed(KEY_Q))
+            {
+                goto QuitGame;
+            }
+            if (IsKeyPressed(KEY_T))
+            {
+                goto StartNewGame;
+            }
         }
 
         EndDrawing();
     }
-    // eliberare memorie
+
+    QuitGame:
+    WindowShouldClose();
     UnloadTexture(boxTexture);
     UnloadTexture(box0Texture);
     UnloadTexture(box1Texture);
@@ -425,11 +445,10 @@ int main()
     UnloadTexture(bombTexture);
     UnloadTexture(startMenu);
     UnloadTexture(difficultyMenu);
-    CloseWindow();
     return 0;
 }
 
-// verifica daca mouse-ul este pe o celula
+// Checks if the mouse is on a cell
 bool IndexIsValid(int x, int y)
 {
     return x >= 1 && x <= COLS && y >= 1 && y <= ROWS;
@@ -452,7 +471,7 @@ void CellRevealed(int x, int y)
     }
 }
 
-// numara minele vecine
+// Counts Adjacent Mines
 int CountMines(int x, int y)
 {
     int count = 0;
@@ -470,7 +489,8 @@ int CountMines(int x, int y)
     return count;
 }
 
-void border() // bordare matrice
+//matrix border
+void border()
 {
     for (int i = 0; i <= COLS + 1; i++)
     {
@@ -485,7 +505,7 @@ void border() // bordare matrice
     }
 }
 
-// arata toate casutele invecinate cu 0
+// checks for 0 surrounding mines
 void check0(int x, int y)
 {
     for (int i = x - 1; i <= x + 1; i++)
