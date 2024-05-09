@@ -445,6 +445,8 @@ int main()
     UnloadTexture(bombTexture);
     UnloadTexture(startMenu);
     UnloadTexture(difficultyMenu);
+    UnloadTexture(youLoseMenu);
+    UnloadTexture(youWinMenu);
     return 0;
 }
 
