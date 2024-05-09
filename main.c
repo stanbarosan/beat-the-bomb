@@ -23,6 +23,7 @@ typedef struct Cell
     bool revealed;
     bool checked;
     int adjMines;
+    bool flaged;
 } Cell;
 
 Cell grid[COLS][ROWS];
@@ -41,19 +42,21 @@ int main()
 {
     //incarcare poze
 
-    Texture2D box,box1,box2,box3,box4,box5,box6,box7,box8,box0,bomb,flag;
+    Texture2D box= LoadTexture("box.png");
+    //,box1,box2,box3,box4,box5,box6,box7,box8,box0,bomb,flag;
 
 
 
 
 
     // resetare random
-    srand(time(0));
 
     InitWindow(screenWidth, screenHeight, "Raylib Template");
+    play:
+    srand(time(0));
 
-    box= LoadTexture("poze_minesweeper/box.png");
-    box1= LoadTexture("poze_minesweeper/box1.png");/*
+    //box= LoadTexture("box.png");
+   /* box1= LoadTexture("poze_minesweeper/box1.png");
     box2= LoadTexture("poze_minesweeper/box2.png");
     box3= LoadTexture("poze_minesweeper/box3.png");
     box4= LoadTexture("poze_minesweeper/box4.png");
@@ -83,7 +86,8 @@ int main()
                     .y = j,
                     .Mine = false,
                     .revealed = false,
-                    .checked = false};
+                    .checked = false,
+                    .flaged=false};
         }
     }
 
@@ -124,7 +128,7 @@ int main()
         {
             Vector2 mPos = GetMousePosition();
             int indexX = mPos.x / cellsWidth + 1;
-            int indexY = (mPos.y) / cellsHeight + 1;
+            int indexY = mPos.y / cellsHeight + 1;
 
             if (IndexIsValid(indexX, indexY) == true)
             {
@@ -133,7 +137,18 @@ int main()
             }
         }
 
-
+        // stegulet
+        if(IsMouseButtonPressed(MOUSE_BUTTON_RIGHT)){
+            Vector2 mPos = GetMousePosition();
+            int indexX = mPos.x / cellsWidth + 1;
+            int indexY= mPos.y /cellsHeight + 1;
+            if(IndexIsValid(indexX, indexY)==true && grid[indexX][indexY].flaged==false){
+                grid[indexX][indexY].flaged=true;
+            }
+            else if(IndexIsValid(indexX, indexY)==true && grid[indexX][indexY].flaged==true){
+                grid[indexX][indexY].flaged=false;
+            }
+        }
 
 
         // desenez grid-ul
@@ -141,21 +156,14 @@ int main()
 
         ClearBackground(RAYWHITE);
 
-
-        //DrawTextureEx(box, (Vector2){ 50, 50},0,0.2f,WHITE);
-        //DrawTexture(box,0,0, WHITE);
-
-        //DrawTexture()
-
-
         for (int i = 1; i <= COLS; i++)
         {
-            for (int j = 1; j <= ROWS; j++)
-            {
-                if(grid[i][j].revealed==false)
-                    DrawTextureEx(box, (Vector2){ (grid[i][j].x-1)*cellsWidth, (grid[i][j].y-1)*cellsHeight},0,0.07f,WHITE);
-                
-                
+            for (int j = 1; j <= ROWS; j++) {
+
+                //if(grid[i][j].revealed==false)
+                // DrawTextureEx(box, (Vector2){ ((float)(grid[i][j].x - 1)) * cellsWidth, ((float)(grid[i][j].y - 1)) * cellsHeight},0,0.07f,WHITE);
+
+                /*
                 else
                 {
                     if(grid[i][j].adjMines==1)
@@ -188,14 +196,24 @@ int main()
 
 
                 }
+*/
 
-                        
-                        
-                //CellDraw(grid[i][j]);
+
+                CellDraw(grid[i][j]);
 
             }
         }
-
+        bool replay=true;
+        for(int i=1;i<=ROWS;i++){
+            for(int j=1;j<=COLS;j++){
+                if(grid[i][j].revealed==false){
+                    replay=false;
+                }
+            }
+        }
+        if(replay==true && IsKeyPressed(KEY_K)){
+            goto play;
+        }
         EndDrawing();
     }
 
@@ -221,11 +239,14 @@ void CellDraw(Cell cell)
             DrawRectangle((cell.x - 1) * cellsWidth, (cell.y - 1) * cellsHeight, cellsWidth, cellsHeight, LIGHTGRAY);
 
             if (cell.adjMines != 0)
-                //DrawText(TextFormat("%d", cell.adjMines), (cell.x - 1) * cellsWidth + 6, (cell.y - 1) * cellsHeight + 4, cellsHeight - 8, BLACK);
+                DrawText(TextFormat("%d", cell.adjMines), (cell.x - 1) * cellsWidth + 6, (cell.y - 1) * cellsHeight + 4, cellsHeight - 8, BLACK);
                 if(cell.adjMines==1){
 
                 }
         }
+    }
+    else if(cell.flaged==true) {
+        DrawRectangle((cell.x - 1) * cellsWidth, (cell.y - 1) * cellsHeight, cellsWidth, cellsHeight, GREEN);
     }
 }
 
