@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <time.h>
+#include <stdio.h>
 
 #include "raylib.h"
 #include "raymath.h"
@@ -26,7 +27,7 @@ typedef struct Cell
     bool flaged;
 } Cell;
 
-Cell grid[COLS][ROWS];
+Cell grid[COLS+1][ROWS+1];
 
 void CellDraw(Cell);
 bool IndexIsValid(int, int);
@@ -42,20 +43,20 @@ int main()
 {
     //incarcare poze
 
-    Texture2D box= LoadTexture("box.png");
-    //,box1,box2,box3,box4,box5,box6,box7,box8,box0,bomb,flag;
-
-
-
-
 
     // resetare random
 
     InitWindow(screenWidth, screenHeight, "Raylib Template");
     play:
     srand(time(0));
-
-    //box= LoadTexture("box.png");
+    Texture2D boxTexture = LoadTexture("C:\\Users\\Stefan\\CLionProjects\\untitled\\box.png");
+    if (boxTexture.id == 0)
+    {
+        // Print an error message if the texture failed to load
+        printf("Failed to load texture!\n");
+        CloseWindow();
+        return 1;
+    }
    /* box1= LoadTexture("poze_minesweeper/box1.png");
     box2= LoadTexture("poze_minesweeper/box2.png");
     box3= LoadTexture("poze_minesweeper/box3.png");
@@ -92,12 +93,15 @@ int main()
     }
 
     // pune mine
-    int placeMines = 30;
+    int placeMines = 10;
     while (placeMines > 0)
     {
-        int i = rand() % COLS;
-        int j = rand() % ROWS;
-
+        int i=0;
+        int j=0;
+        while (i < 1 || j < 1 || i > COLS || j > ROWS){
+            i=(rand()%COLS)+1;
+            j=(rand()%ROWS)+1;
+        }
         if (grid[i][j].Mine == false)
         {
             grid[i][j].Mine = true;
@@ -105,9 +109,14 @@ int main()
             placeMines--;
         }
     }
-
     // bordarez grid-ul ca sa nu mai fie probleme la numararea bombelor
     border();
+    for(int i=1;i<=10;i++){
+        for(int j=1;j<=10;j++){
+            printf("%d ",grid[j][i].Mine);
+        }
+        printf("\n");
+    }
 
     for (int i = 1; i <= COLS; i++)
     {
@@ -160,8 +169,8 @@ int main()
         {
             for (int j = 1; j <= ROWS; j++) {
 
-                //if(grid[i][j].revealed==false)
-                // DrawTextureEx(box, (Vector2){ ((float)(grid[i][j].x - 1)) * cellsWidth, ((float)(grid[i][j].y - 1)) * cellsHeight},0,0.07f,WHITE);
+                if(grid[i][j].revealed==false)
+                    DrawTextureEx(boxTexture, (Vector2){ ((float)(grid[i][j].x - 1)) * cellsWidth, ((float)(grid[i][j].y - 1)) * cellsHeight},0,0.07f,WHITE);
 
                 /*
                 else
@@ -203,20 +212,33 @@ int main()
 
             }
         }
-        bool replay=true;
-        for(int i=1;i<=ROWS;i++){
-            for(int j=1;j<=COLS;j++){
+        int bombs_flagged=0;
+        bool all_revealed=true;
+        for(int i=1;i<=COLS;i++){
+            for(int j=1;j<=ROWS;j++){
                 if(grid[i][j].revealed==false){
-                    replay=false;
+                    all_revealed=false;
+                }
+                if(grid[i][j].Mine==true && grid[i][j].flaged==true){
+                    bombs_flagged++;
                 }
             }
         }
-        if(replay==true && IsKeyPressed(KEY_K)){
+        //lose
+        if(all_revealed==true && IsKeyPressed(KEY_K)){
+            goto play;
+        }
+        //win
+        bool win=false;
+        if(bombs_flagged==10){
+            win=true;
+        }
+        if(win==true && IsKeyPressed(KEY_K)){
             goto play;
         }
         EndDrawing();
     }
-
+    UnloadTexture(boxTexture);
     CloseWindow();
 
     return 0;
@@ -263,8 +285,8 @@ void CellRevealed(int x, int y)
     if (grid[x][y].Mine == true)
     {
         // lose
-        for(int i=1;i<=ROWS;i++){
-            for(int j=1;j<=COLS;j++){
+        for(int i=1;i<=COLS;i++){
+            for(int j=1;j<=ROWS;j++){
                 grid[i][j].revealed=true;
             }
         }
