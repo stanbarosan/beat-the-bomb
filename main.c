@@ -144,13 +144,13 @@ void CellRevealed(int x, int y)
     if(grid[x][y].Mine==true)
     {
         //lose
-        DrawRectangleLines(x*cellsWidth, y*cellsHeight, cellsWidth, cellsHeight, RED);
+        DrawRectangle(x*cellsWidth, y*cellsHeight, cellsWidth, cellsHeight, RED);
     }
     else
     {
 
         //schimb culoarea celulei
-        DrawRectangleLines(x*cellsWidth, y*cellsHeight, cellsWidth, cellsHeight, LIGHTGRAY);
+        DrawRectangle(x*cellsWidth, y*cellsHeight, cellsWidth, cellsHeight, LIGHTGRAY);
 
     }
 
