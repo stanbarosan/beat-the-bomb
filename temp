@@ -2,6 +2,7 @@
 #include <time.h>
 #include <stdio.h>
 #include "raylib.h"
+#include <string.h>
 
 #define COLS 10
 #define ROWS 10
@@ -32,8 +33,88 @@ int CountMines(int, int);
 void check0(int x, int y);
 void border();
 
+//intrebari + grafuri
+
+
+#define MAX_OPTIONS 4
+#define MAX_QUESTION_LENGTH 500
+
+struct Node
+{
+    char intrebare[MAX_QUESTION_LENGTH];
+    int valid;
+    struct Node *left1;
+    struct Node *left2;
+    struct Node *right1;
+    struct Node *right2;
+};
+
+struct Node *root1;
+struct Node *root2;
+struct Node *root3;
+struct Node *root4;
+
+struct Node *createNode(char varianta[MAX_QUESTION_LENGTH], int correct)
+{
+    struct Node *newNode = (struct Node *)malloc(sizeof(struct Node));
+    strcpy(newNode->intrebare, varianta);
+    newNode->left1 = NULL;
+    newNode->right2 = NULL;
+    newNode->left2 = NULL;
+    newNode->right1 = NULL;
+    newNode->valid = correct;
+    return newNode;
+}
+
+
+
+
+
+
+
 int main()
 {
+    //intrebari
+    // Crearea primului arbore
+    root1 = createNode("The EU's target commitments until 2030 are the following:", 1);
+    root1->left1 = createNode(" Protecting by legislation of a minimum of 30% of the EU's land and sea area", 1);
+    root1->left2 = createNode(" Protection of at least 10% of EU's protected areas, including primary and old-growth forests", 0);
+    root1->right1 = createNode(" Adequate management of all protected areas, by defining clear conservation and monitoring objectives and measures ", 1);
+
+    // Crearea celui de-al doilea arbore
+    root2 = createNode(" The EU biodiversity strategy for the year 2030 supposes the following:", 1);
+    root2->left1 = createNode(" Protecting and restoring nature in the EU, by consolidating a coherent and effective network for protected areas and restoring degraded habitats ", 1);
+    root2->left2 = createNode(" Enabling a new governance framework to ensure co-resposibility and co-ownership by all relevant actors including setting up new financial opportunities", 1);
+    root2->right1 = createNode(" Adopting a global biodiversity agenda, to strengthen the contribution of the EU toward healthy global biodiversity loss", 1);
+    root2->right2 = createNode(" Adopting a global biodiversity agenda, to strenght the contribution of the EU toward maximizing EU use of resources and consumption on other biodiversity-rich areas of the planet", 0);
+
+    // Crearea celui de-al treilea arbore
+    root3 = createNode(" Opportunities to conserve and restore biodiversity in agrifood systems through bioeconomy practices are the following:", 1);
+    root3->left1 = createNode(" closure of the biological resources loop and maximizing the use of residual streams for agriculture, food processing, and biobased industries, by using, recycling, or composting waste materials and converting them into useful products", 1);
+    root3->left2 = createNode(" adopting green products or practices based on bioferitilizers, biopesticides, bio-based plastics, bioremediation, or microbiome innovations", 1);
+    root3->right1 = createNode(" by using pesticides(of chemical synthesis) in agriculture", 0);
+    root3->right2 = createNode(" by introducing the invasive species in these habitats", 0);
+
+    // Crearea celui de-al patrulea arbore
+    root4 = createNode(" Bioeconomy can support biodiversity in the following ways:", 1);
+    root4->left1 = createNode(" By afforestation and reforestation because this action can reduce habitat loss and restore ecosystems", 1);
+    root4->left2 = createNode(" Adopting eco-friendly approaches to restore degraded eco-systems and enhance biodiversity by applying biological solutions", 1);
+    root4->right1 = createNode(" Carbon sequestration in soil, water, and forests and its storage in harvested products", 1);
+    root4->right2 = createNode(" Maintaining the old industrial processes to obtain fossil-based products and raw materials", 0);
+
+    struct Node *currentQuestion = NULL;
+    struct Node *currentVarianta = NULL;
+
+    srand(time(NULL)); // Setează seed-ul pentru generarea de numere aleatoare
+
+
+
+
+
+
+
+
+    //minesweeper
     int numberOfMines = 15;
     InitWindow(screenWidth, screenHeight, "Beat The Bomb");
 
@@ -318,7 +399,21 @@ int main()
             }
         }
 
+
+
+
+
+
         EndDrawing();
+
+
+
+
+
+
+
+
+
     }
 
     QuitGame:
