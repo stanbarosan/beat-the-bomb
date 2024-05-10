@@ -2,16 +2,15 @@
 #include <time.h>
 #include <stdio.h>
 #include "raylib.h"
+#include <string.h>
 
-#define COLS 10
-#define ROWS 10
+int COLS,ROWS;
 
 const int screenWidth = 800;
 const int screenHeight = 800;
 
 // Cells
-const int cellsWidth = screenWidth / (COLS);
-const int cellsHeight = screenHeight / (ROWS);
+
 
 typedef struct Cell
 {
@@ -24,7 +23,7 @@ typedef struct Cell
     bool flagged;
 } Cell;
 
-Cell grid[COLS + 1][ROWS + 1];
+Cell grid[34][34];
 
 bool IndexIsValid(int, int);
 void CellRevealed(int, int);
@@ -32,9 +31,50 @@ int CountMines(int, int);
 void check0(int x, int y);
 void border();
 
+float image_scale;
+
+
+//grafurile cu intrebari
+#define MAX_QUESTION_LENGTH 500
+
+struct Node
+{
+    char intrebare[MAX_QUESTION_LENGTH];
+    int valid;
+    struct Node *left1;
+    struct Node *left2;
+    struct Node *right1;
+    struct Node *right2;
+};
+
+struct Node *root1;
+struct Node *root2;
+struct Node *root3;
+struct Node *root4;
+
+struct Node *createNode(char varianta[MAX_QUESTION_LENGTH], int correct)
+{
+    struct Node *newNode = (struct Node *)malloc(sizeof(struct Node));
+    strcpy(newNode->intrebare, varianta);
+    newNode->left1 = NULL;
+    newNode->right2 = NULL;
+    newNode->left2 = NULL;
+    newNode->right1 = NULL;
+    newNode->valid = correct;
+    return newNode;
+}
+
+
+
+
 int main()
 {
-    int numberOfMines = 15;
+    image_scale=0.08;
+    COLS=10;
+    ROWS=10;
+    int numberOfMines = 10;
+
+    //minesweeper
     InitWindow(screenWidth, screenHeight, "Beat The Bomb");
 
     // START
@@ -56,7 +96,6 @@ int main()
     Texture2D box7Texture = LoadTexture("..\\textures\\box7.png");
     Texture2D box8Texture = LoadTexture("..\\textures\\box8.png");
     Texture2D flagTexture = LoadTexture("..\\textures\\flag.png");
-    Texture2D bomb = LoadTexture("..\\textures\\bomb.png");
     Texture2D startMenu = LoadTexture("..\\textures\\startmenu.png");
     Texture2D difficultyMenu = LoadTexture("..\\textures\\difficulty.png");
     Texture2D youLoseMenu = LoadTexture("..\\textures\\youlosemenu.png");
@@ -84,7 +123,11 @@ int main()
         {
             Vector2 mousePosition = GetMousePosition();
             if(mousePosition.x >= 296 && mousePosition.x <= 524 && mousePosition.y >=319 && mousePosition.y <=421)
+
+            {
+
                 start=true;
+            }
         }
 
 
@@ -101,21 +144,34 @@ int main()
             DrawTextureEx(difficultyMenu, (Vector2){0, 0}, 0, 1.4f, WHITE);
             if (IsKeyPressed(KEY_V))
             {
+                image_scale=0.16;
+                COLS=5;
+                ROWS=5;
+
                 numberOfMines = 7;
                 isOptionsMenuOpen = false;
             }
             if (IsKeyPressed(KEY_E))
             {
+                image_scale=0.08;
+                COLS=10;
+                ROWS=10;
                 numberOfMines = 10;
                 isOptionsMenuOpen = false;
             }
             if (IsKeyPressed(KEY_N))
             {
+                image_scale=0.04;
+                COLS=20;
+                ROWS=20;
                 numberOfMines = 15;
                 isOptionsMenuOpen = false;
             }
             if (IsKeyPressed(KEY_H))
             {
+                image_scale=0.0242424;
+                COLS=33;
+                ROWS=33;
                 numberOfMines = 23;
                 isOptionsMenuOpen = false;
             }
@@ -182,6 +238,10 @@ int main()
     }
 
     // Game Interface
+    int cellsWidth = screenWidth / COLS;
+    int cellsHeight = screenHeight / (ROWS);
+
+
     while (!WindowShouldClose())
     {
         // Mouse Input
@@ -200,14 +260,163 @@ int main()
         // Flags
         if (IsMouseButtonPressed(MOUSE_BUTTON_RIGHT))
         {
+            const int fontSize2 = 20;
+            const int padding2 = 20;
+            bool put=false;
+
+
+            // Crearea întrebărilor și a arborelor
+
+            // Crearea primului arbore
+            root1 = createNode("The EU's target commitments until 2030 are the following:", 1);
+            root1->left1 = createNode("Protecting by legislation of a minimum of 30% of the EU's land and sea area", 1);
+            root1->left2 = createNode("Protection of at least 10% of EU's protected areas, including primary and old-growth forests", 0);
+            root1->right1 = createNode("Adequate management of all protected areas, by defining clear conservation and monitoring \nobjectives and measures ", 1);
+
+            // Crearea celui de-al doilea arbore
+            root2 = createNode(" The EU biodiversity strategy for the year 2030 supposes the following:", 1);
+            root2->left1 = createNode("Protecting and restoring nature in the EU, by consolidating a coherent and effective \nnetwork for protected areas and restoring degraded habitats ", 1);
+            root2->left2 = createNode("Enabling a new governance framework to ensure co-resposibility and co-ownership by all \nrelevant actors including setting up new financial opportunities", 1);
+            root2->right1 = createNode("Adopting a global biodiversity agenda, to strengthen the contribution of the EU toward \nhealthy global biodiversity loss", 1);
+            root2->right2 = createNode("Adopting a global biodiversity agenda, to strenght the contribution of the EU toward \nmaximizing EU use of resources and consumption on other biodiversity-rich areas of the planet", 0);
+
+            // Crearea celui de-al treilea arbore
+            root3 = createNode(" Opportunities to conserve and restore biodiversity in agrifood systems through bioeconomy \npractices are the following:", 1);
+            root3->left1 = createNode(" closure of the biological resources loop and maximizing the use of residual streams for \nagriculture, food processing, and biobased industries, by using, recycling, or composting waste\n materials and converting them into useful products", 1);
+            root3->left2 = createNode(" adopting green products or practices based on bioferitilizers, biopesticides, \nbio-based plastics, bioremediation, or microbiome innovations", 1);
+            root3->right1 = createNode(" by using pesticides(of chemical synthesis) in agriculture", 0);
+            root3->right2 = createNode(" by introducing the invasive species in these habitats", 0);
+            // Crearea celui de-al patrulea arbore
+            root4 = createNode(" Bioeconomy can support biodiversity in the following ways:", 1);
+            root4->left1 = createNode(" By afforestation and reforestation because this action can reduce habitat loss and \nrestore ecosystems", 1);
+            root4->left2 = createNode(" Adopting eco-friendly approaches to restore degraded eco-systems and enhance biodiversity \nby applying biological solutions", 1);
+            root4->right1 = createNode(" Carbon sequestration in soil, water, and forests and its storage in harvested products", 1);
+            root4->right2 = createNode(" Maintaining the old industrial processes to obtain fossil-based products and raw materials", 0);
+
+            struct Node *currentQuestion = NULL;
+            struct Node *currentVarianta = NULL;
+
+            bool truePressed=false;
+            bool falsePressed=false;
+            while (!WindowShouldClose()) {
+                if (currentQuestion == NULL) {
+                    int general = rand() % 4;
+
+                    switch (general) {
+                        case 0:
+                            currentQuestion = root1;
+                            break;
+                        case 1:
+                            currentQuestion = root2;
+                            break;
+                        case 2:
+                            currentQuestion = root3;
+                            break;
+                        case 3:
+                            currentQuestion = root4;
+                            break;
+                        default:
+                            break;
+                    }
+
+                    // Alege o singură variantă de răspuns pentru a fi afișată
+                    int quiz = rand() % 4;
+
+                    switch (quiz) {
+                        case 0:
+                            currentVarianta = currentQuestion->left1;
+                            break;
+                        case 1:
+                            currentVarianta = currentQuestion->left2;
+                            break;
+                        case 2:
+                            currentVarianta = currentQuestion->right1;
+                            break;
+                        case 3:
+                            currentVarianta = NULL;
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                if (currentVarianta != NULL) { // Desenează întrebarea și opțiunile
+                    BeginDrawing();
+                    ClearBackground(BLACK);
+                    DrawText(currentQuestion->intrebare, padding2, padding2, fontSize2, RAYWHITE);
+                    DrawText(currentVarianta->intrebare, padding2, padding2 + fontSize2 * 3, fontSize2, RAYWHITE);
+
+                    // Desenează instrucțiunile pentru utilizator
+                    if (truePressed == false && falsePressed == false) {
+                        DrawText("Press [T] for true.", padding2, padding2 + fontSize2 * 7, fontSize2, RAYWHITE);
+                        DrawText("Press [F] for false.", padding2, padding2 + fontSize2 * 8, fontSize2, RAYWHITE);
+                    }
+
+                    if (IsKeyDown(KEY_T)) {
+                        truePressed = true;
+                    } else if (IsKeyDown(KEY_F)) {
+                        falsePressed = true;
+                    }
+                    if (truePressed == true) {
+                        if (currentVarianta->valid == 1) {
+                            DrawText("Correct!", padding2, padding2 + fontSize2 * 9, fontSize2, RAYWHITE);
+                            put = true;
+                        } else {
+
+                            DrawText("Incorrect!", padding2, padding2 + fontSize2 * 9, fontSize2, RAYWHITE);
+
+                        }
+
+                        DrawText("Press (x) to continue game", padding2, padding2 + fontSize2 * 10, fontSize2,
+                                 RAYWHITE);
+                    } else if (falsePressed == true) {
+                        if (currentVarianta->valid == 0) {
+
+                            DrawText("Correct!", padding2, padding2 + fontSize2 * 9, fontSize2, RAYWHITE);
+                            put = true;
+
+                        } else {
+
+                            DrawText("Incorrect!", padding2, padding2 + fontSize2 * 9, fontSize2, RAYWHITE);
+
+                        }
+
+                        DrawText("Press (x) to continue game", padding2, padding2 + fontSize2 * 10, fontSize2,
+                                 RAYWHITE);
+                    }
+                    if (IsKeyDown(KEY_X)) {
+
+                        goto Continu;
+                    }
+
+
+                    EndDrawing();
+                }
+                else {
+                    while(!WindowShouldClose())
+                    {
+                        BeginDrawing();
+                        ClearBackground(BLACK);
+                        DrawText("Wild Card!", padding2, padding2 + 30, fontSize2, RAYWHITE);
+                        EndDrawing();
+                        put=true;
+                        goto Continu;
+                    }
+
+
+                }
+            }
+            Continu:
+
+
+
             Vector2 mousePosition = GetMousePosition();
             int cellIndexX = mousePosition.x / cellsWidth + 1;
             int cellIndexY = mousePosition.y / cellsHeight + 1;
-            if (IndexIsValid(cellIndexX, cellIndexY) == true && grid[cellIndexX][cellIndexY].flagged == false)
+            if (IndexIsValid(cellIndexX, cellIndexY) == true && grid[cellIndexX][cellIndexY].flagged == false && put==true)
             {
                 grid[cellIndexX][cellIndexY].flagged = true;
             }
-            else if (IndexIsValid(cellIndexX, cellIndexY) == true && grid[cellIndexX][cellIndexY].flagged == true)
+            else if (IndexIsValid(cellIndexX, cellIndexY) == true && grid[cellIndexX][cellIndexY].flagged == true && put==true)
             {
                 grid[cellIndexX][cellIndexY].flagged = false;
             }
@@ -225,44 +434,44 @@ int main()
                     if (grid[i][j].Mine == true)
                     {
                         DrawRectangle((grid[i][j].x - 1) * cellsWidth, (grid[i][j].y - 1) * cellsHeight, cellsWidth, cellsHeight, RED);
-                        DrawTextureEx(bombTexture, (Vector2){(grid[i][j].x - 1) * cellsWidth, (grid[i][j].y - 1) * cellsHeight}, 0, 0.07f, WHITE);
+                        DrawTextureEx(bombTexture, (Vector2){(grid[i][j].x - 1) * cellsWidth, (grid[i][j].y - 1) * cellsHeight}, 0, image_scale, WHITE);
                     }
                     if (grid[i][j].Mine == false)
                     {
                         if (grid[i][j].adjMines == 1)
-                            DrawTextureEx(box1Texture, (Vector2){(grid[i][j].x - 1) * cellsWidth, (grid[i][j].y - 1) * cellsHeight}, 0, 0.065f, WHITE);
+                            DrawTextureEx(box1Texture, (Vector2){(grid[i][j].x - 1) * cellsWidth, (grid[i][j].y - 1) * cellsHeight}, 0, image_scale, WHITE);
 
                         if (grid[i][j].adjMines == 2)
-                            DrawTextureEx(box2Texture, (Vector2){(grid[i][j].x - 1) * cellsWidth, (grid[i][j].y - 1) * cellsHeight}, 0, 0.075f, WHITE);
+                            DrawTextureEx(box2Texture, (Vector2){(grid[i][j].x - 1) * cellsWidth, (grid[i][j].y - 1) * cellsHeight}, 0, image_scale, WHITE);
 
                         if (grid[i][j].adjMines == 3)
-                            DrawTextureEx(box3Texture, (Vector2){(grid[i][j].x - 1) * cellsWidth, (grid[i][j].y - 1) * cellsHeight}, 0, 0.066f, WHITE);
+                            DrawTextureEx(box3Texture, (Vector2){(grid[i][j].x - 1) * cellsWidth, (grid[i][j].y - 1) * cellsHeight}, 0, image_scale, WHITE);
 
                         if (grid[i][j].adjMines == 4)
-                            DrawTextureEx(box4Texture, (Vector2){(grid[i][j].x - 1) * cellsWidth, (grid[i][j].y - 1) * cellsHeight}, 0, 0.066f, WHITE);
+                            DrawTextureEx(box4Texture, (Vector2){(grid[i][j].x - 1) * cellsWidth, (grid[i][j].y - 1) * cellsHeight}, 0, image_scale, WHITE);
 
                         if (grid[i][j].adjMines == 5)
-                            DrawTextureEx(box5Texture, (Vector2){(grid[i][j].x - 1) * cellsWidth, (grid[i][j].y - 1) * cellsHeight}, 0, 0.077f, WHITE);
+                            DrawTextureEx(box5Texture, (Vector2){(grid[i][j].x - 1) * cellsWidth, (grid[i][j].y - 1) * cellsHeight}, 0, image_scale, WHITE);
 
                         if (grid[i][j].adjMines == 6)
-                            DrawTextureEx(box6Texture, (Vector2){(grid[i][j].x - 1) * cellsWidth, (grid[i][j].y - 1) * cellsHeight}, 0, 0.35f, WHITE);
+                            DrawTextureEx(box6Texture, (Vector2){(grid[i][j].x - 1) * cellsWidth, (grid[i][j].y - 1) * cellsHeight}, 0, image_scale, WHITE);
 
                         if (grid[i][j].adjMines == 7)
-                            DrawTextureEx(box7Texture, (Vector2){(grid[i][j].x - 1) * cellsWidth, (grid[i][j].y - 1) * cellsHeight}, 0, 0.077f, WHITE);
+                            DrawTextureEx(box7Texture, (Vector2){(grid[i][j].x - 1) * cellsWidth, (grid[i][j].y - 1) * cellsHeight}, 0, image_scale, WHITE);
 
                         if (grid[i][j].adjMines == 8)
-                            DrawTextureEx(box8Texture, (Vector2){(grid[i][j].x - 1) * cellsWidth, (grid[i][j].y - 1) * cellsHeight}, 0, 0.077f, WHITE);
+                            DrawTextureEx(box8Texture, (Vector2){(grid[i][j].x - 1) * cellsWidth, (grid[i][j].y - 1) * cellsHeight}, 0, image_scale, WHITE);
 
                         if (grid[i][j].adjMines == 0)
-                            DrawTextureEx(box0Texture, (Vector2){(grid[i][j].x - 1) * cellsWidth, (grid[i][j].y - 1) * cellsHeight}, 0, 0.29f, WHITE);
+                            DrawTextureEx(box0Texture, (Vector2){(grid[i][j].x - 1) * cellsWidth, (grid[i][j].y - 1) * cellsHeight}, 0, image_scale, WHITE);
                     }
                 }
                 if (grid[i][j].revealed == false)
                 {
-                    DrawTextureEx(boxTexture, (Vector2){((float)(grid[i][j].x - 1)) * cellsWidth, ((float)(grid[i][j].y - 1)) * cellsHeight}, 0, 0.065f, WHITE);
+                    DrawTextureEx(boxTexture, (Vector2){((float)(grid[i][j].x - 1)) * cellsWidth, ((float)(grid[i][j].y - 1)) * cellsHeight}, 0, image_scale, WHITE);
                     if (grid[i][j].flagged == true)
                     {
-                        DrawTextureEx(flagTexture, (Vector2){((float)(grid[i][j].x - 1)) * cellsWidth, ((float)(grid[i][j].y - 1)) * cellsHeight}, 0, 0.07f, WHITE);
+                        DrawTextureEx(flagTexture, (Vector2){((float)(grid[i][j].x - 1)) * cellsWidth, ((float)(grid[i][j].y - 1)) * cellsHeight}, 0, image_scale, WHITE);
                     }
                 }
             }
@@ -319,6 +528,7 @@ int main()
         }
 
         EndDrawing();
+
     }
 
     QuitGame:
