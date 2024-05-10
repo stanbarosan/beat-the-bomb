@@ -80,11 +80,15 @@ int main()
             DrawTextureEx(startMenu, (Vector2){0, 0}, 0, 0.75f, WHITE);
         }
         // Play Game (Start)
-        if (IsKeyPressed(KEY_P) && isOptionsMenuOpen == false)
+        if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && isOptionsMenuOpen == false)
         {
-            start = true;
-            break;
+            Vector2 mousePosition = GetMousePosition();
+            if(mousePosition.x >= 296 && mousePosition.x <= 524 && mousePosition.y >=319 && mousePosition.y <=421)
+                start=true;
         }
+
+
+
         // Quit Game
         if (IsKeyPressed(KEY_Q) && isOptionsMenuOpen == false)
         {
