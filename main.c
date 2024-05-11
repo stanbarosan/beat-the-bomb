@@ -105,84 +105,82 @@ int main()
     // Start Menu
     bool start = false;
     bool isOptionsMenuOpen = false;
-    while (start != true)
-    {
+    while (start != true) {
 
         BeginDrawing();
         ClearBackground(RAYWHITE);
-        if (isOptionsMenuOpen == false)
-        {
+        if (isOptionsMenuOpen == false) {
             ClearBackground(RAYWHITE);
         }
-        if (isOptionsMenuOpen == false)
-        {
-            DrawTextureEx(startMenu, (Vector2){0, 0}, 0, 0.75f, WHITE);
+        if (isOptionsMenuOpen == false) {
+            DrawTextureEx(startMenu, (Vector2) {0, 0}, 0, 0.192f, WHITE);
         }
         // Play Game (Start)
-        if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && isOptionsMenuOpen == false)
-        {
+        if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && isOptionsMenuOpen == false) {
             Vector2 mousePosition = GetMousePosition();
-            if(mousePosition.x >= 296 && mousePosition.x <= 524 && mousePosition.y >=319 && mousePosition.y <=421)
+            if (mousePosition.x >= 217 && mousePosition.x <= 588 && mousePosition.y >= 220 && mousePosition.y <= 318) {
 
-            {
-
-                start=true;
+                start = true;
             }
         }
 
 
 
         // Quit Game
-        if (IsKeyPressed(KEY_Q) && isOptionsMenuOpen == false)
-        {
-            goto QuitGame;
+        if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && isOptionsMenuOpen == false) {
+            Vector2 mousePosition = GetMousePosition();
+            if (mousePosition.x >= 220 && mousePosition.x <= 589 && mousePosition.y >= 484 && mousePosition.y <= 583) {
+                goto QuitGame;
+            }
         }
+
         // Options Menu (Difficulties)
-        if (IsKeyPressed(KEY_O) || isOptionsMenuOpen == true)
+        Vector2 mousePosition = GetMousePosition();
+        if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) || isOptionsMenuOpen == true && mousePosition.x >= 220 && mousePosition.x <= 589 && mousePosition.y >= 351 && mousePosition.y <= 449)
+                isOptionsMenuOpen = true;
+
+
+        if(isOptionsMenuOpen == true)
         {
-            isOptionsMenuOpen = true;
-            DrawTextureEx(difficultyMenu, (Vector2){0, 0}, 0, 1.4f, WHITE);
-            if (IsKeyPressed(KEY_V))
-            {
-                image_scale=0.16;
-                COLS=5;
-                ROWS=5;
+            DrawTextureEx(difficultyMenu, (Vector2) {0, 0}, 0, 0.192f, WHITE);
+            if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && mousePosition.x >= 236 && mousePosition.x <= 568 && mousePosition.y >= 209 && mousePosition.y <= 298) {
+                image_scale = 0.16;
+                COLS = 5;
+                ROWS = 5;
 
                 numberOfMines = 7;
                 isOptionsMenuOpen = false;
             }
-            if (IsKeyPressed(KEY_E))
-            {
-                image_scale=0.08;
-                COLS=10;
-                ROWS=10;
+            if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && mousePosition.x >= 236 && mousePosition.x <= 568 && mousePosition.y >= 319 && mousePosition.y <= 407) {
+                image_scale = 0.08;
+                COLS = 10;
+                ROWS = 10;
                 numberOfMines = 10;
                 isOptionsMenuOpen = false;
             }
-            if (IsKeyPressed(KEY_N))
-            {
-                image_scale=0.04;
-                COLS=20;
-                ROWS=20;
+            if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && mousePosition.x >= 236 && mousePosition.x <= 568 && mousePosition.y >= 432 && mousePosition.y <= 520) {
+                image_scale = 0.04;
+                COLS = 20;
+                ROWS = 20;
                 numberOfMines = 15;
                 isOptionsMenuOpen = false;
             }
-            if (IsKeyPressed(KEY_H))
-            {
-                image_scale=0.0242424;
-                COLS=33;
-                ROWS=33;
+            if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && mousePosition.x >= 236 && mousePosition.x <= 568 && mousePosition.y >= 543 && mousePosition.y <= 633) {
+                image_scale = 0.0242424;
+                COLS = 33;
+                ROWS = 33;
                 numberOfMines = 23;
                 isOptionsMenuOpen = false;
             }
-            if (IsKeyPressed(KEY_I))
-            {
+            if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && mousePosition.x >= 236 && mousePosition.x <= 568 && mousePosition.y >= 651 && mousePosition.y <= 742) {
                 numberOfMines = 30;
                 isOptionsMenuOpen = false;
             }
         }
+
         EndDrawing();
     }
+
     // Creating the Grids
     for (int i = 0; i <= COLS + 1; i++)
     {
@@ -502,12 +500,14 @@ int main()
         // win
         if (flaggedBombsCount == numberOfMines && allSafeCellsRevealed == true)
         {
-            DrawTextureEx(youWinMenu, (Vector2){0, 0}, 0, 0.75f, WHITE);
-            if (IsKeyPressed(KEY_Q))
+            DrawTextureEx(youWinMenu, (Vector2){0, 0}, 0, 0.8f, WHITE);
+            Vector2 mousePosition=GetMousePosition();
+
+            if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && mousePosition.x >= 487 && mousePosition.x <= 672 && mousePosition.y >= 551 && mousePosition.y <= 646)
             {
                 goto QuitGame;
             }
-            if (IsKeyPressed(KEY_T))
+            if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && mousePosition.x >= 131 && mousePosition.x <= 320 && mousePosition.y >= 551 && mousePosition.y <= 646)
             {
                 goto StartNewGame;
             }
@@ -516,12 +516,14 @@ int main()
         // lose
         if (allCellsRevealed == true)
         {
-            DrawTextureEx(youLoseMenu, (Vector2){0, 0}, 0, 0.4f, WHITE);
-            if (IsKeyPressed(KEY_Q))
+            DrawTextureEx(youLoseMenu, (Vector2){0, 0}, 0, 0.8f, WHITE);
+            Vector2 mousePosition=GetMousePosition();
+
+            if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && mousePosition.x >= 487 && mousePosition.x <= 672 && mousePosition.y >= 551 && mousePosition.y <= 646)
             {
                 goto QuitGame;
             }
-            if (IsKeyPressed(KEY_T))
+            if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && mousePosition.x >= 131 && mousePosition.x <= 320 && mousePosition.y >= 551 && mousePosition.y <= 646)
             {
                 goto StartNewGame;
             }
