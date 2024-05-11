@@ -69,18 +69,13 @@ struct Node *createNode(char varianta[MAX_QUESTION_LENGTH], int correct)
 
 int main()
 {
-    image_scale=0.08;
-    COLS=10;
-    ROWS=10;
-    int numberOfMines = 10;
+
 
     //minesweeper
     InitWindow(screenWidth, screenHeight, "Beat The Bomb");
 
     // START
-    StartNewGame:
-    //  Reset Random Generator
-    srand((unsigned)time(NULL));
+
 
     // Loading Textures
 
@@ -101,14 +96,24 @@ int main()
     Texture2D youLoseMenu = LoadTexture("..\\textures\\youlosemenu.png");
     Texture2D youWinMenu = LoadTexture("..\\textures\\youwinmenu.png");
 
+    //  Reset Random Generator
+    srand((unsigned)time(NULL));
 
+    StartNewGame:
     // Start Menu
+    image_scale=0.08;
+    COLS=10;
+    ROWS=10;
+    int numberOfMines = 10;
+
+
+
     bool start = false;
     bool isOptionsMenuOpen = false;
     while (start != true) {
 
         BeginDrawing();
-        ClearBackground(RAYWHITE);
+        //ClearBackground(RAYWHITE);
         if (isOptionsMenuOpen == false) {
             ClearBackground(RAYWHITE);
         }
@@ -135,13 +140,19 @@ int main()
         }
 
         // Options Menu (Difficulties)
-        Vector2 mousePosition = GetMousePosition();
-        if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) || isOptionsMenuOpen == true && mousePosition.x >= 220 && mousePosition.x <= 589 && mousePosition.y >= 351 && mousePosition.y <= 449)
-                isOptionsMenuOpen = true;
 
-
-        if(isOptionsMenuOpen == true)
+        if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) || isOptionsMenuOpen == true)
         {
+            Vector2 mousePosition = GetMousePosition();
+            if(mousePosition.x >= 220 && mousePosition.x <= 589 && mousePosition.y >= 351 && mousePosition.y <= 449)
+            isOptionsMenuOpen = true;
+        }
+
+
+        if (isOptionsMenuOpen == true)
+        {
+            Vector2 mousePosition = GetMousePosition();
+            printf("1");
             DrawTextureEx(difficultyMenu, (Vector2) {0, 0}, 0, 0.192f, WHITE);
             if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && mousePosition.x >= 236 && mousePosition.x <= 568 && mousePosition.y >= 209 && mousePosition.y <= 298) {
                 image_scale = 0.16;
