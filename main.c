@@ -162,25 +162,28 @@ int main()
                 image_scale = 0.08;
                 COLS = 10;
                 ROWS = 10;
-                numberOfMines = 10;
+                numberOfMines = 20;
                 isOptionsMenuOpen = false;
             }
             if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && mousePosition.x >= 236 && mousePosition.x <= 568 && mousePosition.y >= 432 && mousePosition.y <= 520) {
-                image_scale = 0.04;
-                COLS = 20;
-                ROWS = 20;
-                numberOfMines = 15;
+                image_scale = 0.06;
+                COLS = 15;
+                ROWS = 15;
+                numberOfMines =45;
                 isOptionsMenuOpen = false;
             }
             if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && mousePosition.x >= 236 && mousePosition.x <= 568 && mousePosition.y >= 543 && mousePosition.y <= 633) {
-                image_scale = 0.0242424;
-                COLS = 33;
-                ROWS = 33;
-                numberOfMines = 23;
+                image_scale = 0.04;
+                COLS = 20;
+                ROWS = 20;
+                numberOfMines = 100;
                 isOptionsMenuOpen = false;
             }
             if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && mousePosition.x >= 236 && mousePosition.x <= 568 && mousePosition.y >= 651 && mousePosition.y <= 742) {
-                numberOfMines = 30;
+                image_scale=0.03;
+                COLS=25;
+                ROWS=25;
+                numberOfMines =200;
                 isOptionsMenuOpen = false;
             }
         }
