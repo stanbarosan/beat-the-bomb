@@ -113,15 +113,12 @@ int main()
     while (start != true) {
 
         BeginDrawing();
-        //ClearBackground(RAYWHITE);
-        if (isOptionsMenuOpen == false) {
-            ClearBackground(RAYWHITE);
-        }
         if (isOptionsMenuOpen == false) {
             DrawTextureEx(startMenu, (Vector2) {0, 0}, 0, 0.192f, WHITE);
         }
         // Play Game (Start)
-        if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && isOptionsMenuOpen == false) {
+        if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && isOptionsMenuOpen == false)
+        {
             Vector2 mousePosition = GetMousePosition();
             if (mousePosition.x >= 217 && mousePosition.x <= 588 && mousePosition.y >= 220 && mousePosition.y <= 318) {
 
@@ -129,10 +126,9 @@ int main()
             }
         }
 
-
-
         // Quit Game
-        if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && isOptionsMenuOpen == false) {
+        if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && isOptionsMenuOpen == false)
+        {
             Vector2 mousePosition = GetMousePosition();
             if (mousePosition.x >= 220 && mousePosition.x <= 589 && mousePosition.y >= 484 && mousePosition.y <= 583) {
                 goto QuitGame;
@@ -141,7 +137,7 @@ int main()
 
         // Options Menu (Difficulties)
 
-        if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) || isOptionsMenuOpen == true)
+        if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
         {
             Vector2 mousePosition = GetMousePosition();
             if(mousePosition.x >= 220 && mousePosition.x <= 589 && mousePosition.y >= 351 && mousePosition.y <= 449)
@@ -149,7 +145,7 @@ int main()
         }
 
 
-        if (isOptionsMenuOpen == true)
+        if (isOptionsMenuOpen == true )
         {
             Vector2 mousePosition = GetMousePosition();
             printf("1");
