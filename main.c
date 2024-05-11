@@ -531,7 +531,7 @@ int main()
             {
                 goto QuitGame;
             }
-            if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && mousePosition.x >= 131 && mousePosition.x <= 320 && mousePosition.y >= 551 && mousePosition.y <= 646)
+            if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT) && mousePosition.x >= 131 && mousePosition.x <= 320 && mousePosition.y >= 551 && mousePosition.y <= 646)
             {
                 goto StartNewGame;
             }
@@ -547,7 +547,7 @@ int main()
             {
                 goto QuitGame;
             }
-            if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && mousePosition.x >= 131 && mousePosition.x <= 320 && mousePosition.y >= 551 && mousePosition.y <= 646)
+            if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT) && mousePosition.x >= 131 && mousePosition.x <= 320 && mousePosition.y >= 551 && mousePosition.y <= 646)
             {
                 goto StartNewGame;
             }
