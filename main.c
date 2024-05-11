@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include "raylib.h"
 #include <string.h>
+#include <unistd.h>
 
 int COLS,ROWS;
 
@@ -73,6 +74,7 @@ int main()
 
     //minesweeper
     InitWindow(screenWidth, screenHeight, "Beat The Bomb");
+    SetTargetFPS(30);
 
     // START
 
@@ -136,12 +138,16 @@ int main()
         }
 
         // Options Menu (Difficulties)
+        clock_t last_action_time = 0;
+        const clock_t cooldown = CLOCKS_PER_SEC; // Un cooldown de o secundă
+
 
         if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && isOptionsMenuOpen == false)
         {
             Vector2 mousePosition = GetMousePosition();
             if(mousePosition.x >= 220 && mousePosition.x <= 589 && mousePosition.y >= 351 && mousePosition.y <= 449)
             isOptionsMenuOpen = true;
+            //sleep(0.1);
         }
 
 
@@ -149,7 +155,9 @@ int main()
         {
             Vector2 mousePosition = GetMousePosition();
             printf("1");
+            ClearBackground(RAYWHITE);
             DrawTextureEx(difficultyMenu, (Vector2) {0, 0}, 0, 0.192f, WHITE);
+            printf("2");
             if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && mousePosition.x >= 236 && mousePosition.x <= 568 && mousePosition.y >= 209 && mousePosition.y <= 298) {
                 image_scale = 0.16;
                 COLS = 5;
