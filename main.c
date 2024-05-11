@@ -137,7 +137,7 @@ int main()
 
         // Options Menu (Difficulties)
 
-        if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
+        if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && isOptionsMenuOpen == false)
         {
             Vector2 mousePosition = GetMousePosition();
             if(mousePosition.x >= 220 && mousePosition.x <= 589 && mousePosition.y >= 351 && mousePosition.y <= 449)
@@ -402,9 +402,13 @@ int main()
                         BeginDrawing();
                         ClearBackground(BLACK);
                         DrawText("Wild Card!", padding2, padding2 + 30, fontSize2, RAYWHITE);
+                        DrawText("Press (x) to continue game", padding2, padding2 + fontSize2 * 3, fontSize2,RAYWHITE);
                         EndDrawing();
                         put=true;
-                        goto Continu;
+                        if (IsKeyDown(KEY_X)) {
+
+                            goto Continu;
+                        }
                     }
 
 
