@@ -142,12 +142,15 @@ int main()
         const clock_t cooldown = CLOCKS_PER_SEC; // Un cooldown de o secundă
 
 
-        if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && isOptionsMenuOpen == false)
+        if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT) && isOptionsMenuOpen == false)
         {
             Vector2 mousePosition = GetMousePosition();
             if(mousePosition.x >= 220 && mousePosition.x <= 589 && mousePosition.y >= 351 && mousePosition.y <= 449)
-            isOptionsMenuOpen = true;
-            //sleep(0.1);
+            {
+                isOptionsMenuOpen = true;
+                SetMousePosition(mousePosition.x,408);
+            }
+
         }
 
 
@@ -155,7 +158,6 @@ int main()
         {
             Vector2 mousePosition = GetMousePosition();
             printf("1");
-            ClearBackground(RAYWHITE);
             DrawTextureEx(difficultyMenu, (Vector2) {0, 0}, 0, 0.192f, WHITE);
             printf("2");
             if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && mousePosition.x >= 236 && mousePosition.x <= 568 && mousePosition.y >= 209 && mousePosition.y <= 298) {
@@ -166,14 +168,14 @@ int main()
                 numberOfMines = 7;
                 isOptionsMenuOpen = false;
             }
-            if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && mousePosition.x >= 236 && mousePosition.x <= 568 && mousePosition.y >= 319 && mousePosition.y <= 407) {
+            if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT) && mousePosition.x >= 236 && mousePosition.x <= 568 && mousePosition.y >= 319 && mousePosition.y <= 407) {
                 image_scale = 0.08;
                 COLS = 10;
                 ROWS = 10;
                 numberOfMines = 20;
                 isOptionsMenuOpen = false;
             }
-            if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && mousePosition.x >= 236 && mousePosition.x <= 568 && mousePosition.y >= 432 && mousePosition.y <= 520) {
+            if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT) && mousePosition.x >= 236 && mousePosition.x <= 568 && mousePosition.y >= 432 && mousePosition.y <= 520) {
                 image_scale = 0.06;
                 COLS = 15;
                 ROWS = 15;
