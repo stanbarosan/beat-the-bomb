@@ -165,35 +165,35 @@ int main()
                 COLS = 5;
                 ROWS = 5;
 
-                numberOfMines = 7;
+                numberOfMines = 4;
                 isOptionsMenuOpen = false;
             }
             if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT) && mousePosition.x >= 236 && mousePosition.x <= 568 && mousePosition.y >= 319 && mousePosition.y <= 407) {
                 image_scale = 0.08;
                 COLS = 10;
                 ROWS = 10;
-                numberOfMines = 20;
+                numberOfMines = 12;
                 isOptionsMenuOpen = false;
             }
             if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT) && mousePosition.x >= 236 && mousePosition.x <= 568 && mousePosition.y >= 432 && mousePosition.y <= 520) {
                 image_scale = 0.06;
                 COLS = 15;
                 ROWS = 15;
-                numberOfMines =45;
+                numberOfMines =28;
                 isOptionsMenuOpen = false;
             }
             if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && mousePosition.x >= 236 && mousePosition.x <= 568 && mousePosition.y >= 543 && mousePosition.y <= 633) {
                 image_scale = 0.04;
                 COLS = 20;
                 ROWS = 20;
-                numberOfMines = 100;
+                numberOfMines = 58;
                 isOptionsMenuOpen = false;
             }
             if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && mousePosition.x >= 236 && mousePosition.x <= 568 && mousePosition.y >= 651 && mousePosition.y <= 742) {
                 image_scale=0.03;
                 COLS=25;
                 ROWS=25;
-                numberOfMines =200;
+                numberOfMines =99;
                 isOptionsMenuOpen = false;
             }
         }
@@ -278,6 +278,9 @@ int main()
         // Flags
         if (IsMouseButtonPressed(MOUSE_BUTTON_RIGHT))
         {
+            Vector2 mousePosition = GetMousePosition();
+            int cellIndexX = mousePosition.x / cellsWidth + 1;
+            int cellIndexY = mousePosition.y / cellsHeight + 1;
             const int fontSize2 = 20;
             const int padding2 = 20;
             bool put=false;
@@ -351,7 +354,8 @@ int main()
                             currentVarianta = currentQuestion->right1;
                             break;
                         case 3:
-                            currentVarianta = NULL;
+                           if(currentQuestion == root1) currentVarianta = NULL;
+                           else currentVarianta=currentQuestion->right2;
                             break;
                         default:
                             break;
@@ -430,10 +434,6 @@ int main()
             Continu:
 
 
-
-            Vector2 mousePosition = GetMousePosition();
-            int cellIndexX = mousePosition.x / cellsWidth + 1;
-            int cellIndexY = mousePosition.y / cellsHeight + 1;
             if (IndexIsValid(cellIndexX, cellIndexY) == true && grid[cellIndexX][cellIndexY].flagged == false && put==true)
             {
                 grid[cellIndexX][cellIndexY].flagged = true;
