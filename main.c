@@ -260,7 +260,7 @@ int main()
     // Game Interface
     int cellsWidth = screenWidth / COLS;
     int cellsHeight = screenHeight / (ROWS);
-    float timer = 0.0f;
+    
     bool ok=true;
 
     while (!WindowShouldClose())
@@ -319,8 +319,8 @@ int main()
 
             struct Node *currentQuestion = NULL;
             struct Node *currentVarianta = NULL;
-            timer += GetFrameTime();
-
+            //timer += GetFrameTime();
+            float timer = 10.0f;
             bool truePressed=false;
             bool falsePressed=false;
             while (!WindowShouldClose()) {
@@ -366,6 +366,7 @@ int main()
                     }
                 }
                 if (currentVarianta != NULL) { // Desenează întrebarea și opțiunile
+                    
                     BeginDrawing();
                     ClearBackground(BLACK);
                     DrawText(TextFormat("Timer: %.2f", timer), 10, 10, fontSize2, RAYWHITE);
@@ -373,18 +374,13 @@ int main()
                     DrawText(currentVarianta->intrebare, padding2, padding2 + fontSize2 * 4, fontSize2, RAYWHITE);
 
                     // Desenează instrucțiunile pentru utilizator
-                    if (truePressed == false && falsePressed == false) {
+                
+                    if (truePressed == false && falsePressed == false && timer > 0.0f) {
+                        timer=timer-0.0333;
                         DrawText("Press [T] for true.", padding2, padding2 + fontSize2 * 8, fontSize2, RAYWHITE);
                         DrawText("Press [F] for false.", padding2, padding2 + fontSize2 * 9, fontSize2, RAYWHITE);
                     }
-                    if (timer >= 10.0f)
-                    {
-                        ok = false;
-                        DrawText("Correct!", padding2, padding2 + fontSize2 * 10, fontSize2, RAYWHITE);
-                        DrawText("Press (x) to continue game", padding2, padding2 + fontSize2 * 11, fontSize2,
-                                 RAYWHITE);
 
-                    }
                     if (ok == true) {
                         if (IsKeyDown(KEY_T)) {
                             truePressed = true;
