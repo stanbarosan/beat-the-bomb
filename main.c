@@ -178,7 +178,7 @@ int main()
                 isOptionsMenuOpen = false;
             }
             if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT) && mousePosition.x >= 236 && mousePosition.x <= 568 && mousePosition.y >= 432 && mousePosition.y <= 520) {
-                image_scale = 0.06;
+                image_scale = 0.053;
                 COLS = 15;
                 ROWS = 15;
                 numberOfMines =28;
