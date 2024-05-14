@@ -294,28 +294,28 @@ int main()
             // Crearea primului arbore
             root1 = createNode("The EU's target commitments until 2030 are the following:", 1);
             root1->left1 = createNode("Protecting by legislation of a minimum of 30% of the EU's land and sea area", 1);
-            root1->left2 = createNode("Protection of at least 10% of EU's protected areas, including primary and old-growth forests", 0);
-            root1->right1 = createNode("Adequate management of all protected areas, by defining clear conservation and monitoring \nobjectives and measures ", 1);
+            root1->left2 = createNode("Protection of at least 10% of EU's protected areas, including primary \nand old-growth forests", 0);
+            root1->right1 = createNode("Adequate management of all protected areas, by defining clear \nconservation and monitoring objectives and measures ", 1);
 
             // Crearea celui de-al doilea arbore
             root2 = createNode(" The EU biodiversity strategy for the year 2030 supposes the following:", 1);
-            root2->left1 = createNode("Protecting and restoring nature in the EU, by consolidating a coherent and effective \nnetwork for protected areas and restoring degraded habitats ", 1);
-            root2->left2 = createNode("Enabling a new governance framework to ensure co-resposibility and co-ownership by all \nrelevant actors including setting up new financial opportunities", 1);
-            root2->right1 = createNode("Adopting a global biodiversity agenda, to strengthen the contribution of the EU toward \nhealthy global biodiversity loss", 1);
-            root2->right2 = createNode("Adopting a global biodiversity agenda, to strenght the contribution of the EU toward \nmaximizing EU use of resources and consumption on other biodiversity-rich areas of the planet", 0);
+            root2->left1 = createNode("Protecting and restoring nature in the EU, by consolidating a coherent and \neffective network for protected areas and restoring degraded habitats ", 1);
+            root2->left2 = createNode("Enabling a new governance framework to ensure co-resposibility and co-ownership \nby all relevant actors including setting up new financial opportunities", 1);
+            root2->right1 = createNode("Adopting a global biodiversity agenda, to strengthen the contribution \nof the EU toward healthy global biodiversity loss", 1);
+            root2->right2 = createNode("Adopting a global biodiversity agenda, to strenght the contribution of the EU \ntoward maximizing EU use of resources and consumption \non other biodiversity-rich areas of the planet", 0);
 
             // Crearea celui de-al treilea arbore
-            root3 = createNode(" Opportunities to conserve and restore biodiversity in agrifood systems through bioeconomy \npractices are the following:", 1);
-            root3->left1 = createNode(" closure of the biological resources loop and maximizing the use of residual streams for \nagriculture, food processing, and biobased industries, by using, recycling, or composting waste\n materials and converting them into useful products", 1);
+            root3 = createNode(" Opportunities to conserve and restore biodiversity in agrifood systems through \nbioeconomy practices are the following:", 1);
+            root3->left1 = createNode(" closure of the biological resources loop and maximizing the use of residual \nstreams for agriculture, food processing, and biobased industries, by using,\nrecycling, or composting waste materials and converting them into useful products", 1);
             root3->left2 = createNode(" adopting green products or practices based on bioferitilizers, biopesticides, \nbio-based plastics, bioremediation, or microbiome innovations", 1);
             root3->right1 = createNode(" by using pesticides(of chemical synthesis) in agriculture", 0);
             root3->right2 = createNode(" by introducing the invasive species in these habitats", 0);
             // Crearea celui de-al patrulea arbore
             root4 = createNode(" Bioeconomy can support biodiversity in the following ways:", 1);
-            root4->left1 = createNode(" By afforestation and reforestation because this action can reduce habitat loss and \nrestore ecosystems", 1);
-            root4->left2 = createNode(" Adopting eco-friendly approaches to restore degraded eco-systems and enhance biodiversity \nby applying biological solutions", 1);
-            root4->right1 = createNode(" Carbon sequestration in soil, water, and forests and its storage in harvested products", 1);
-            root4->right2 = createNode(" Maintaining the old industrial processes to obtain fossil-based products and raw materials", 0);
+            root4->left1 = createNode(" By afforestation and reforestation because this action can reduce habitat \nloss and restore ecosystems", 1);
+            root4->left2 = createNode(" Adopting eco-friendly approaches to restore degraded eco-systems and enhance \nbiodiversity by applying biological solutions", 1);
+            root4->right1 = createNode(" Carbon sequestration in soil, water, and forests and its storage \nin harvested products", 1);
+            root4->right2 = createNode(" Maintaining the old industrial processes to obtain fossil-based \nproducts and raw materials", 0);
 
             struct Node *currentQuestion = NULL;
             struct Node *currentVarianta = NULL;
