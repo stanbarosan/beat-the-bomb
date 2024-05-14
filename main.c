@@ -75,28 +75,30 @@ int main()
     //minesweeper
     InitWindow(screenWidth, screenHeight, "Beat The Bomb");
     SetTargetFPS(30);
+        Image icon =LoadImage ("textures\\beat_the_bomb.png");
+    SetWindowIcon(icon);
 
     // START
 
 
     // Loading Textures
 
-    Texture2D bombTexture = LoadTexture("..\\textures\\bomb.png");
-    Texture2D boxTexture = LoadTexture("..\\textures\\box.png");
-    Texture2D box0Texture = LoadTexture("..\\textures\\box0.png");
-    Texture2D box1Texture = LoadTexture("..\\textures\\box1.png");
-    Texture2D box2Texture = LoadTexture("..\\textures\\box2.png");
-    Texture2D box3Texture = LoadTexture("..\\textures\\box3.png");
-    Texture2D box4Texture = LoadTexture("..\\textures\\box4.png");
-    Texture2D box5Texture = LoadTexture("..\\textures\\box5.png");
-    Texture2D box6Texture = LoadTexture("..\\textures\\box6.png");
-    Texture2D box7Texture = LoadTexture("..\\textures\\box7.png");
-    Texture2D box8Texture = LoadTexture("..\\textures\\box8.png");
-    Texture2D flagTexture = LoadTexture("..\\textures\\flag.png");
-    Texture2D startMenu = LoadTexture("..\\textures\\startmenu.png");
-    Texture2D difficultyMenu = LoadTexture("..\\textures\\difficulty.png");
-    Texture2D youLoseMenu = LoadTexture("..\\textures\\youlosemenu.png");
-    Texture2D youWinMenu = LoadTexture("..\\textures\\youwinmenu.png");
+    Texture2D bombTexture = LoadTexture("textures\\bomb.png");
+    Texture2D boxTexture = LoadTexture("textures\\box.png");
+    Texture2D box0Texture = LoadTexture("textures\\box0.png");
+    Texture2D box1Texture = LoadTexture("textures\\box1.png");
+    Texture2D box2Texture = LoadTexture("textures\\box2.png");
+    Texture2D box3Texture = LoadTexture("textures\\box3.png");
+    Texture2D box4Texture = LoadTexture("textures\\box4.png");
+    Texture2D box5Texture = LoadTexture("textures\\box5.png");
+    Texture2D box6Texture = LoadTexture("textures\\box6.png");
+    Texture2D box7Texture = LoadTexture("textures\\box7.png");
+    Texture2D box8Texture = LoadTexture("textures\\box8.png");
+    Texture2D flagTexture = LoadTexture("textures\\flag.png");
+    Texture2D startMenu = LoadTexture("textures\\startmenu.png");
+    Texture2D difficultyMenu = LoadTexture("textures\\difficulty.png");
+    Texture2D youLoseMenu = LoadTexture("textures\\youlosemenu.png");
+    Texture2D youWinMenu = LoadTexture("textures\\youwinmenu.png");
 
     //  Reset Random Generator
     srand((unsigned)time(NULL));
@@ -258,7 +260,8 @@ int main()
     // Game Interface
     int cellsWidth = screenWidth / COLS;
     int cellsHeight = screenHeight / (ROWS);
-
+    float timer = 0.0f;
+    bool ok=true;
 
     while (!WindowShouldClose())
     {
@@ -316,6 +319,7 @@ int main()
 
             struct Node *currentQuestion = NULL;
             struct Node *currentVarianta = NULL;
+            timer += GetFrameTime();
 
             bool truePressed=false;
             bool falsePressed=false;
@@ -364,72 +368,83 @@ int main()
                 if (currentVarianta != NULL) { // Desenează întrebarea și opțiunile
                     BeginDrawing();
                     ClearBackground(BLACK);
-                    DrawText(currentQuestion->intrebare, padding2, padding2, fontSize2, RAYWHITE);
-                    DrawText(currentVarianta->intrebare, padding2, padding2 + fontSize2 * 3, fontSize2, RAYWHITE);
+                    DrawText(TextFormat("Timer: %.2f", timer), 10, 10, fontSize2, RAYWHITE);
+                    DrawText(currentQuestion->intrebare, padding2, padding2 + fontSize2, fontSize2, RAYWHITE);
+                    DrawText(currentVarianta->intrebare, padding2, padding2 + fontSize2 * 4, fontSize2, RAYWHITE);
 
                     // Desenează instrucțiunile pentru utilizator
                     if (truePressed == false && falsePressed == false) {
-                        DrawText("Press [T] for true.", padding2, padding2 + fontSize2 * 7, fontSize2, RAYWHITE);
-                        DrawText("Press [F] for false.", padding2, padding2 + fontSize2 * 8, fontSize2, RAYWHITE);
+                        DrawText("Press [T] for true.", padding2, padding2 + fontSize2 * 8, fontSize2, RAYWHITE);
+                        DrawText("Press [F] for false.", padding2, padding2 + fontSize2 * 9, fontSize2, RAYWHITE);
                     }
-
-                    if (IsKeyDown(KEY_T)) {
-                        truePressed = true;
-                    } else if (IsKeyDown(KEY_F)) {
-                        falsePressed = true;
-                    }
-                    if (truePressed == true) {
-                        if (currentVarianta->valid == 1) {
-                            DrawText("Correct!", padding2, padding2 + fontSize2 * 9, fontSize2, RAYWHITE);
-                            put = true;
-                        } else {
-
-                            DrawText("Incorrect!", padding2, padding2 + fontSize2 * 9, fontSize2, RAYWHITE);
-
-                        }
-
-                        DrawText("Press (x) to continue game", padding2, padding2 + fontSize2 * 10, fontSize2,
-                                 RAYWHITE);
-                    } else if (falsePressed == true) {
-                        if (currentVarianta->valid == 0) {
-
-                            DrawText("Correct!", padding2, padding2 + fontSize2 * 9, fontSize2, RAYWHITE);
-                            put = true;
-
-                        } else {
-
-                            DrawText("Incorrect!", padding2, padding2 + fontSize2 * 9, fontSize2, RAYWHITE);
-
-                        }
-
-                        DrawText("Press (x) to continue game", padding2, padding2 + fontSize2 * 10, fontSize2,
-                                 RAYWHITE);
-                    }
-                    if (IsKeyDown(KEY_X)) {
-
-                        goto Continu;
-                    }
-
-
-                    EndDrawing();
-                }
-                else {
-                    while(!WindowShouldClose())
+                    if (timer >= 10.0f)
                     {
-                        BeginDrawing();
-                        ClearBackground(BLACK);
-                        DrawText("Wild Card!", padding2, padding2 + 30, fontSize2, RAYWHITE);
-                        DrawText("Press (x) to continue game", padding2, padding2 + fontSize2 * 3, fontSize2,RAYWHITE);
-                        EndDrawing();
-                        put=true;
+                        ok = false;
+                        DrawText("Correct!", padding2, padding2 + fontSize2 * 10, fontSize2, RAYWHITE);
+                        DrawText("Press (x) to continue game", padding2, padding2 + fontSize2 * 11, fontSize2,
+                                 RAYWHITE);
+
+                    }
+                    if (ok == true) {
+                        if (IsKeyDown(KEY_T)) {
+                            truePressed = true;
+                        } else if (IsKeyDown(KEY_F)) {
+                            falsePressed = true;
+                        }
+                        if (truePressed == true) {
+                            if (currentVarianta->valid == 1) {
+                                DrawText("Correct!", padding2, padding2 + fontSize2 * 10, fontSize2, RAYWHITE);
+                                put = true;
+                            } else {
+
+                                DrawText("Incorrect!", padding2, padding2 + fontSize2 * 10, fontSize2, RAYWHITE);
+
+                            }
+
+                            DrawText("Press (x) to continue game", padding2, padding2 + fontSize2 * 11, fontSize2,
+                                     RAYWHITE);
+                        } else if (falsePressed == true) {
+                            if (currentVarianta->valid == 0) {
+
+                                DrawText("Correct!", padding2, padding2 + fontSize2 * 10, fontSize2, RAYWHITE);
+                                put = true;
+
+                            } else {
+
+                                DrawText("Incorrect!", padding2, padding2 + fontSize2 * 10, fontSize2, RAYWHITE);
+
+                            }
+
+                            DrawText("Press (x) to continue game", padding2, padding2 + fontSize2 * 11, fontSize2,
+                                     RAYWHITE);
+                        }
+                    }
+
                         if (IsKeyDown(KEY_X)) {
 
                             goto Continu;
                         }
+
+
+                        EndDrawing();
+                    } else {
+                        while (!WindowShouldClose()) {
+                            BeginDrawing();
+                            ClearBackground(BLACK);
+                            DrawText("Wild Card!", padding2, padding2 + 30, fontSize2, RAYWHITE);
+                            DrawText("Press (x) to continue game", padding2, padding2 + fontSize2 * 3, fontSize2,
+                                     RAYWHITE);
+                            EndDrawing();
+                            put = true;
+                            if (IsKeyDown(KEY_X)) {
+
+                                goto Continu;
+                            }
+                        }
+
+
                     }
 
-
-                }
             }
             Continu:
 
@@ -575,6 +590,7 @@ int main()
     UnloadTexture(difficultyMenu);
     UnloadTexture(youLoseMenu);
     UnloadTexture(youWinMenu);
+    UnloadImage(icon);
     return 0;
 }
 
