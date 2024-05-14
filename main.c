@@ -368,17 +368,18 @@ int main()
                 if (currentVarianta != NULL) { // Desenează întrebarea și opțiunile
                     
                     BeginDrawing();
-                    ClearBackground(BLACK);
+                    //ClearBackground(BLACK);
+                    DrawRectangle(0,200,800,400,BLACK);
                     DrawText(TextFormat("Timer: %.2f", timer), 10, 10, fontSize2, RAYWHITE);
-                    DrawText(currentQuestion->intrebare, padding2, padding2 + fontSize2, fontSize2, RAYWHITE);
-                    DrawText(currentVarianta->intrebare, padding2, padding2 + fontSize2 * 4, fontSize2, RAYWHITE);
+                    DrawText(currentQuestion->intrebare, padding2, padding2 + fontSize2+200, fontSize2, RAYWHITE);
+                    DrawText(currentVarianta->intrebare, padding2, padding2 + fontSize2 * 4+200, fontSize2, RAYWHITE);
 
                     // Desenează instrucțiunile pentru utilizator
                 
                     if (truePressed == false && falsePressed == false && timer > 0.0f) {
                         timer=timer-0.0333;
-                        DrawText("Press [T] for true.", padding2, padding2 + fontSize2 * 8, fontSize2, RAYWHITE);
-                        DrawText("Press [F] for false.", padding2, padding2 + fontSize2 * 9, fontSize2, RAYWHITE);
+                        DrawText("Press [T] for true.", padding2, padding2 + fontSize2 * 8+200, fontSize2, RAYWHITE);
+                        DrawText("Press [F] for false.", padding2, padding2 + fontSize2 * 9+200, fontSize2, RAYWHITE);
                     }
 
                     if (ok == true) {
@@ -389,29 +390,29 @@ int main()
                         }
                         if (truePressed == true) {
                             if (currentVarianta->valid == 1) {
-                                DrawText("Correct!", padding2, padding2 + fontSize2 * 10, fontSize2, RAYWHITE);
+                                DrawText("Correct!", padding2, padding2 + fontSize2 * 10+200, fontSize2, RAYWHITE);
                                 put = true;
                             } else {
 
-                                DrawText("Incorrect!", padding2, padding2 + fontSize2 * 10, fontSize2, RAYWHITE);
+                                DrawText("Incorrect!", padding2, padding2 + fontSize2 * 10+200, fontSize2, RAYWHITE);
 
                             }
 
-                            DrawText("Press (x) to continue game", padding2, padding2 + fontSize2 * 11, fontSize2,
+                            DrawText("Press (x) to continue game", padding2, padding2 + fontSize2 * 11+200, fontSize2,
                                      RAYWHITE);
                         } else if (falsePressed == true) {
                             if (currentVarianta->valid == 0) {
 
-                                DrawText("Correct!", padding2, padding2 + fontSize2 * 10, fontSize2, RAYWHITE);
+                                DrawText("Correct!", padding2, padding2 + fontSize2 * 10+200, fontSize2, RAYWHITE);
                                 put = true;
 
                             } else {
 
-                                DrawText("Incorrect!", padding2, padding2 + fontSize2 * 10, fontSize2, RAYWHITE);
+                                DrawText("Incorrect!", padding2, padding2 + fontSize2 * 10+200, fontSize2, RAYWHITE);
 
                             }
 
-                            DrawText("Press (x) to continue game", padding2, padding2 + fontSize2 * 11, fontSize2,
+                            DrawText("Press (x) to continue game", padding2, padding2 + fontSize2 * 11+200, fontSize2,
                                      RAYWHITE);
                         }
                     }
@@ -427,8 +428,8 @@ int main()
                         while (!WindowShouldClose()) {
                             BeginDrawing();
                             ClearBackground(BLACK);
-                            DrawText("Wild Card!", padding2, padding2 + 30, fontSize2, RAYWHITE);
-                            DrawText("Press (x) to continue game", padding2, padding2 + fontSize2 * 3, fontSize2,
+                            DrawText("Wild Card!", padding2, padding2 + 30+200, fontSize2, RAYWHITE);
+                            DrawText("Press (x) to continue game", padding2, padding2 + fontSize2 * 3+200, fontSize2,
                                      RAYWHITE);
                             EndDrawing();
                             put = true;
