@@ -285,7 +285,7 @@ int main()
             int cellIndexX = mousePosition.x / cellsWidth + 1;
             int cellIndexY = mousePosition.y / cellsHeight + 1;
             const int fontSize2 = 20;
-            const int padding2 = 20;
+            const int padding2 = 0;
             bool put=false;
 
 
@@ -370,7 +370,7 @@ int main()
                     BeginDrawing();
                     //ClearBackground(BLACK);
                     DrawRectangle(0,200,800,400,BLACK);
-                    DrawText(TextFormat("Timer: %.2f", timer), 10, 210, fontSize2, RAYWHITE);
+                    DrawText(TextFormat("Timer: %.2f", timer), 10, 200, fontSize2, RAYWHITE);
                     DrawText(currentQuestion->intrebare, padding2, padding2 + fontSize2+200, fontSize2, RAYWHITE);
                     DrawText(currentVarianta->intrebare, padding2, padding2 + fontSize2 * 4+200, fontSize2, RAYWHITE);
 
