@@ -261,7 +261,7 @@ int main()
     int cellsWidth = screenWidth / COLS;
     int cellsHeight = screenHeight / (ROWS);
     
-    bool ok=true;
+    bool ok=false;
 
     while (!WindowShouldClose())
     {
@@ -370,7 +370,7 @@ int main()
                     BeginDrawing();
                     //ClearBackground(BLACK);
                     DrawRectangle(0,200,800,400,BLACK);
-                    DrawText(TextFormat("Timer: %.2f", timer), 10, 10, fontSize2, RAYWHITE);
+                    DrawText(TextFormat("Timer: %.2f", timer), 10, 210, fontSize2, RAYWHITE);
                     DrawText(currentQuestion->intrebare, padding2, padding2 + fontSize2+200, fontSize2, RAYWHITE);
                     DrawText(currentVarianta->intrebare, padding2, padding2 + fontSize2 * 4+200, fontSize2, RAYWHITE);
 
@@ -378,9 +378,12 @@ int main()
                 
                     if (truePressed == false && falsePressed == false && timer > 0.0f) {
                         timer=timer-0.0333;
+                        ok=true;
                         DrawText("Press [T] for true.", padding2, padding2 + fontSize2 * 8+200, fontSize2, RAYWHITE);
                         DrawText("Press [F] for false.", padding2, padding2 + fontSize2 * 9+200, fontSize2, RAYWHITE);
                     }
+                    if(timer<=0.0333)
+                        goto skipQusetion;
 
                     if (ok == true) {
                         if (IsKeyDown(KEY_T)) {
@@ -422,7 +425,7 @@ int main()
                             goto Continu;
                         }
 
-
+                           
                         EndDrawing();
                     } else {
                         while (!WindowShouldClose()) {
@@ -444,6 +447,7 @@ int main()
 
             }
             Continu:
+            skipQusetion:
 
 
             if (IndexIsValid(cellIndexX, cellIndexY) == true && grid[cellIndexX][cellIndexY].flagged == false && put==true)
