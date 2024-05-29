@@ -24,7 +24,7 @@ typedef struct Cell
     bool flagged;
 } Cell;
 
-Cell grid[34][34];
+Cell grid[27][27];
 
 bool IndexIsValid(int, int);
 void CellRevealed(int, int);
