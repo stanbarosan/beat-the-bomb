@@ -109,6 +109,7 @@ int main()
     COLS=10;
     ROWS=10;
     int numberOfMines = 10;
+    float reveal_countdown=3;
 
 
 
@@ -285,42 +286,91 @@ int main()
             int cellIndexX = mousePosition.x / cellsWidth + 1;
             int cellIndexY = mousePosition.y / cellsHeight + 1;
             const int fontSize2 = 20;
-            const int padding2 = 0;
+            const int padding2 = 20;
             bool put=false;
 
 
             // Crearea întrebărilor și a arborelor
 
             // Crearea primului arbore
-            root1 = createNode("The EU's target commitments until 2030 are the following:", 1);
-            root1->left1 = createNode("Protecting by legislation of a minimum of 30% of the EU's land and sea area", 1);
-            root1->left2 = createNode("Protection of at least 10% of EU's protected areas, including primary \nand old-growth forests", 0);
-            root1->right1 = createNode("Adequate management of all protected areas, by defining clear \nconservation and monitoring objectives and measures ", 1);
+            root1 = createNode(
+            "Chapter 1\n\n"
+            "The EU's target commitments until 2030 are the following:", 1);
+root1->left1 = createNode(
+    "Protecting by legislation of a minimum of 30% of the EU's land\n"
+    "and sea area", 1);
+root1->left2 = createNode(
+    "Protection of at least 10% of EU's protected areas, including\n"
+    "primary and old-growth forests", 0);
+root1->right1 = createNode(
+    "Adequate management of all protected areas, by defining clear\n"
+    "conservation and monitoring objectives and measures", 1);
 
-            // Crearea celui de-al doilea arbore
-            root2 = createNode(" The EU biodiversity strategy for the year 2030 supposes the following:", 1);
-            root2->left1 = createNode("Protecting and restoring nature in the EU, by consolidating a coherent and \neffective network for protected areas and restoring degraded habitats ", 1);
-            root2->left2 = createNode("Enabling a new governance framework to ensure co-resposibility and co-ownership \nby all relevant actors including setting up new financial opportunities", 1);
-            root2->right1 = createNode("Adopting a global biodiversity agenda, to strengthen the contribution \nof the EU toward healthy global biodiversity loss", 1);
-            root2->right2 = createNode("Adopting a global biodiversity agenda, to strenght the contribution of the EU \ntoward maximizing EU use of resources and consumption \non other biodiversity-rich areas of the planet", 0);
+// Crearea celui de-al doilea arbore
+root2 = createNode(
+    "Chapter 2\n\n"
+    "The EU biodiversity strategy for the year 2030 supposes the\n"
+    "following:", 1);
+root2->left1 = createNode(
+    "Protecting and restoring nature in the EU, by consolidating a\n"
+    "coherent and effective network for protected areas and\n"
+    "restoring degraded habitats", 1);
+root2->left2 = createNode(
+    "Enabling a new governance framework to ensure co-responsibility\n"
+    "and co-ownership by all relevant actors including setting up\n"
+    "new financial opportunities", 1);
+root2->right1 = createNode(
+    "Adopting a global biodiversity agenda, to strengthen the\n"
+    "contribution of the EU toward healthy global biodiversity\n"
+    "loss", 1);
+root2->right2 = createNode(
+    "Adopting a global biodiversity agenda, to strengthen the\n"
+    "contribution of the EU toward maximizing EU use of resources\n"
+    "and consumption on other biodiversity-rich areas of the\n"
+    "planet", 0);
 
-            // Crearea celui de-al treilea arbore
-            root3 = createNode(" Opportunities to conserve and restore biodiversity in agrifood systems through \nbioeconomy practices are the following:", 1);
-            root3->left1 = createNode(" closure of the biological resources loop and maximizing the use of residual \nstreams for agriculture, food processing, and biobased industries, by using,\nrecycling, or composting waste materials and converting them into useful products", 1);
-            root3->left2 = createNode(" adopting green products or practices based on bioferitilizers, biopesticides, \nbio-based plastics, bioremediation, or microbiome innovations", 1);
-            root3->right1 = createNode(" by using pesticides(of chemical synthesis) in agriculture", 0);
-            root3->right2 = createNode(" by introducing the invasive species in these habitats", 0);
-            // Crearea celui de-al patrulea arbore
-            root4 = createNode(" Bioeconomy can support biodiversity in the following ways:", 1);
-            root4->left1 = createNode(" By afforestation and reforestation because this action can reduce habitat \nloss and restore ecosystems", 1);
-            root4->left2 = createNode(" Adopting eco-friendly approaches to restore degraded eco-systems and enhance \nbiodiversity by applying biological solutions", 1);
-            root4->right1 = createNode(" Carbon sequestration in soil, water, and forests and its storage \nin harvested products", 1);
-            root4->right2 = createNode(" Maintaining the old industrial processes to obtain fossil-based \nproducts and raw materials", 0);
+// Crearea celui de-al treilea arbore
+root3 = createNode(
+    "Chapter 3\n\n"
+    "Opportunities to conserve and restore biodiversity in agrifood\n"
+    "systems through bioeconomy practices are the following:", 1);
+root3->left1 = createNode(
+    "Closure of the biological resources loop and maximizing the\n"
+    "use of residual streams for agriculture, food processing, and\n"
+    "biobased industries, by using, recycling, or composting waste\n"
+    "materials and converting them into useful products", 1);
+root3->left2 = createNode(
+    "Adopting green products or practices based on biofertilizers,\n"
+    "biopesticides, bio-based plastics, bioremediation, or\n"
+    "microbiome innovations", 1);
+root3->right1 = createNode(
+    "By using pesticides (of chemical synthesis) in agriculture", 0);
+root3->right2 = createNode(
+    "By introducing the invasive species in these habitats", 0);
+
+// Crearea celui de-al patrulea arbore
+root4 = createNode(
+    "Chapter 4\n\n"
+    "Bioeconomy can support biodiversity in the following ways:", 1);
+root4->left1 = createNode(
+    "By afforestation and reforestation because this action can\n"
+    "reduce habitat loss and restore ecosystems", 1);
+root4->left2 = createNode(
+    "Adopting eco-friendly approaches to restore degraded\n"
+    "ecosystems and enhance biodiversity by applying biological\n"
+    "solutions", 1);
+root4->right1 = createNode(
+    "Carbon sequestration in soil, water, and forests and its\n"
+    "storage in harvested products", 1);
+root4->right2 = createNode(
+    "Maintaining the old industrial processes to obtain fossil-\n"
+    "based products and raw materials", 0);
+
 
             struct Node *currentQuestion = NULL;
             struct Node *currentVarianta = NULL;
             //timer += GetFrameTime();
-            float timer = 10.0f;
+            float timer = 20.0f;
             bool truePressed=false;
             bool falsePressed=false;
             while (!WindowShouldClose()) {
@@ -371,16 +421,16 @@ int main()
                     //ClearBackground(BLACK);
                     DrawRectangle(0,200,800,400,BLACK);
                     DrawText(TextFormat("Timer: %.2f", timer), 10, 200, fontSize2, RAYWHITE);
-                    DrawText(currentQuestion->intrebare, padding2, padding2 + fontSize2+200, fontSize2, RAYWHITE);
-                    DrawText(currentVarianta->intrebare, padding2, padding2 + fontSize2 * 4+200, fontSize2, RAYWHITE);
+                    DrawText(currentQuestion->intrebare, padding2, padding2 + fontSize2+250, fontSize2, RAYWHITE);
+                    DrawText(currentVarianta->intrebare, padding2, padding2 + fontSize2 * 4+250, fontSize2, RAYWHITE);
 
                     // Desenează instrucțiunile pentru utilizator
                 
                     if (truePressed == false && falsePressed == false && timer > 0.0f) {
                         timer=timer-0.0333;
                         ok=true;
-                        DrawText("Press [T] for true.", padding2, padding2 + fontSize2 * 8+200, fontSize2, RAYWHITE);
-                        DrawText("Press [F] for false.", padding2, padding2 + fontSize2 * 9+200, fontSize2, RAYWHITE);
+                        DrawText("Press [T] for true.", padding2, padding2 + fontSize2 * 8+250, fontSize2, RAYWHITE);
+                        DrawText("Press [F] for false.", padding2, padding2 + fontSize2 * 9+250, fontSize2, RAYWHITE);
                     }
                     if(timer<=0.0333)
                         goto skipQusetion;
@@ -554,9 +604,14 @@ int main()
         }
 
         // lose
+        
         if (allCellsRevealed == true)
         {
-            DrawTextureEx(youLoseMenu, (Vector2){0, 0}, 0, 0.8f, WHITE);
+            if(reveal_countdown>0)
+            reveal_countdown=reveal_countdown-0.03333;
+            else
+            {
+               DrawTextureEx(youLoseMenu, (Vector2){0, 0}, 0, 0.8f, WHITE);
             Vector2 mousePosition=GetMousePosition();
 
             if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && mousePosition.x >= 487 && mousePosition.x <= 672 && mousePosition.y >= 551 && mousePosition.y <= 646)
@@ -566,7 +621,10 @@ int main()
             if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT) && mousePosition.x >= 131 && mousePosition.x <= 320 && mousePosition.y >= 551 && mousePosition.y <= 646)
             {
                 goto StartNewGame;
+            } 
             }
+            
+            
         }
 
         EndDrawing();
