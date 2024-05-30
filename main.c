@@ -35,6 +35,7 @@ void border();
 float image_scale;
 
 
+
 //grafurile cu intrebari
 #define MAX_QUESTION_LENGTH 500
 
@@ -107,12 +108,17 @@ int main()
     Sound wrong = LoadSound("sounds\\wrong.mp3");
     Sound boom = LoadSound("sounds\\boom.mp3");
     Sound click = LoadSound("sounds\\click.mp3");
+    Music music = LoadMusicStream("sounds\\music.mp3");
     
-
+    
+    float music_time=0;
+    PlayMusicStream(music);
+    
     //  Reset Random Generator
     srand((unsigned)time(NULL));
 
     StartNewGame:
+    //SeekMusicStream(music,music_time);
     // Start Menu
     image_scale=0.08;
     COLS=10;
@@ -125,7 +131,9 @@ int main()
 
     bool start = false;
     bool isOptionsMenuOpen = false;
-    while (start != true) {
+    while (start != true) 
+    {
+        UpdateMusicStream(music);
 
         BeginDrawing();
         if (isOptionsMenuOpen == false) {
@@ -284,6 +292,7 @@ int main()
 
     while (!WindowShouldClose())
     {
+        UpdateMusicStream(music);
         // Mouse Input
         // Click on cell
         if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
@@ -639,6 +648,7 @@ root4->right2 = createNode(
             }
             if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT) && mousePosition.x >= 131 && mousePosition.x <= 320 && mousePosition.y >= 551 && mousePosition.y <= 646)
             {
+                music_time = GetMusicTimePlayed(music);
                 goto StartNewGame;
             }
         }
@@ -696,6 +706,14 @@ root4->right2 = createNode(
     UnloadTexture(youLoseMenu);
     UnloadTexture(youWinMenu);
     UnloadImage(icon);
+    UnloadSound(click);
+    UnloadSound(boom);
+    UnloadSound(correct);
+    UnloadSound(wrong);
+    UnloadSound(timer_sound);
+    UnloadMusicStream(music);
+    
+    
     return 0;
 }
 
