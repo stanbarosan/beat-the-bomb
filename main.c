@@ -105,6 +105,8 @@ int main()
     Sound timer_sound = LoadSound("sounds\\timer.mp3");
     Sound correct = LoadSound("sounds\\corect.mp3");
     Sound wrong = LoadSound("sounds\\wrong.mp3");
+    Sound boom = LoadSound("sounds\\boom.mp3");
+    Sound click = LoadSound("sounds\\click.mp3");
     
 
     //  Reset Random Generator
@@ -117,6 +119,7 @@ int main()
     ROWS=10;
     int numberOfMines = 10;
     float reveal_countdown=3;
+    bool boom_sound=true;
 
 
 
@@ -132,8 +135,9 @@ int main()
         if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && isOptionsMenuOpen == false)
         {
             Vector2 mousePosition = GetMousePosition();
-            if (mousePosition.x >= 217 && mousePosition.x <= 588 && mousePosition.y >= 220 && mousePosition.y <= 318) {
-
+            if (mousePosition.x >= 217 && mousePosition.x <= 588 && mousePosition.y >= 220 && mousePosition.y <= 318) 
+            {
+                PlaySound(click);
                 start = true;
             }
         }
@@ -142,7 +146,9 @@ int main()
         if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && isOptionsMenuOpen == false)
         {
             Vector2 mousePosition = GetMousePosition();
-            if (mousePosition.x >= 220 && mousePosition.x <= 589 && mousePosition.y >= 484 && mousePosition.y <= 583) {
+            if (mousePosition.x >= 220 && mousePosition.x <= 589 && mousePosition.y >= 484 && mousePosition.y <= 583) 
+            {
+                PlaySound(click);
                 goto QuitGame;
             }
         }
@@ -157,6 +163,7 @@ int main()
             Vector2 mousePosition = GetMousePosition();
             if(mousePosition.x >= 220 && mousePosition.x <= 589 && mousePosition.y >= 351 && mousePosition.y <= 449)
             {
+                PlaySound(click);
                 isOptionsMenuOpen = true;
                 SetMousePosition(mousePosition.x,408);
             }
@@ -167,10 +174,10 @@ int main()
         if (isOptionsMenuOpen == true )
         {
             Vector2 mousePosition = GetMousePosition();
-            printf("1");
             DrawTextureEx(difficultyMenu, (Vector2) {0, 0}, 0, 0.192f, WHITE);
-            printf("2");
-            if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && mousePosition.x >= 236 && mousePosition.x <= 568 && mousePosition.y >= 209 && mousePosition.y <= 298) {
+            if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && mousePosition.x >= 236 && mousePosition.x <= 568 && mousePosition.y >= 209 && mousePosition.y <= 298) 
+            {
+                PlaySound(click);
                 image_scale = 0.16;
                 COLS = 5;
                 ROWS = 5;
@@ -179,6 +186,7 @@ int main()
                 isOptionsMenuOpen = false;
             }
             if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT) && mousePosition.x >= 236 && mousePosition.x <= 568 && mousePosition.y >= 319 && mousePosition.y <= 407) {
+                PlaySound(click);
                 image_scale = 0.08;
                 COLS = 10;
                 ROWS = 10;
@@ -186,6 +194,7 @@ int main()
                 isOptionsMenuOpen = false;
             }
             if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT) && mousePosition.x >= 236 && mousePosition.x <= 568 && mousePosition.y >= 432 && mousePosition.y <= 520) {
+                PlaySound(click);
                 image_scale = 0.053;
                 COLS = 15;
                 ROWS = 15;
@@ -193,6 +202,7 @@ int main()
                 isOptionsMenuOpen = false;
             }
             if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && mousePosition.x >= 236 && mousePosition.x <= 568 && mousePosition.y >= 543 && mousePosition.y <= 633) {
+                PlaySound(click);
                 image_scale = 0.04;
                 COLS = 20;
                 ROWS = 20;
@@ -200,6 +210,7 @@ int main()
                 isOptionsMenuOpen = false;
             }
             if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && mousePosition.x >= 236 && mousePosition.x <= 568 && mousePosition.y >= 651 && mousePosition.y <= 742) {
+                PlaySound(click);
                 image_scale=0.03;
                 COLS=25;
                 ROWS=25;
@@ -282,6 +293,7 @@ int main()
             int cellIndexY = mousePosition.y / cellsHeight + 1;
             if (IndexIsValid(cellIndexX, cellIndexY) == true)
             {
+                PlaySound(click);
                 check0(cellIndexX, cellIndexY);
                 CellRevealed(cellIndexX, cellIndexY);
             }
@@ -635,6 +647,12 @@ root4->right2 = createNode(
         
         if (allCellsRevealed == true)
         {
+            if(boom_sound)
+            {
+                PlaySound(boom);
+                boom_sound=false;
+            }
+                
             if(reveal_countdown>0)
             reveal_countdown=reveal_countdown-0.03333;
             else
