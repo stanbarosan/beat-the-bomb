@@ -24,7 +24,7 @@ typedef struct Cell
     bool flagged;
 } Cell;
 
-Cell grid[27][27];
+Cell grid[34][34];
 
 bool IndexIsValid(int, int);
 void CellRevealed(int, int);
@@ -77,6 +77,8 @@ int main()
     SetTargetFPS(30);
         Image icon =LoadImage ("textures\\beat_the_bomb.png");
     SetWindowIcon(icon);
+    InitAudioDevice();
+    
 
     // START
 
@@ -99,6 +101,11 @@ int main()
     Texture2D difficultyMenu = LoadTexture("textures\\difficulty.png");
     Texture2D youLoseMenu = LoadTexture("textures\\youlosemenu.png");
     Texture2D youWinMenu = LoadTexture("textures\\youwinmenu.png");
+    
+    Sound timer_sound = LoadSound("sounds\\timer.mp3");
+    Sound correct = LoadSound("sounds\\corect.mp3");
+    Sound wrong = LoadSound("sounds\\wrong.mp3");
+    
 
     //  Reset Random Generator
     srand((unsigned)time(NULL));
@@ -369,11 +376,11 @@ root4->right2 = createNode(
 
             struct Node *currentQuestion = NULL;
             struct Node *currentVarianta = NULL;
-            //timer += GetFrameTime();
             float timer = 20.0f;
             bool truePressed=false;
             bool falsePressed=false;
             while (!WindowShouldClose()) {
+                
                 if (currentQuestion == NULL) {
                     int general = rand() % 4;
 
@@ -426,7 +433,10 @@ root4->right2 = createNode(
 
                     // Desenează instrucțiunile pentru utilizator
                 
-                    if (truePressed == false && falsePressed == false && timer > 0.0f) {
+                    if (truePressed == false && falsePressed == false && timer > 0.0f) 
+                    {
+                        if(!IsSoundPlaying(timer_sound))
+                            PlaySound(timer_sound);
                         timer=timer-0.0333;
                         ok=true;
                         DrawText("Press [T] for true.", padding2, padding2 + fontSize2 * 8+250, fontSize2, RAYWHITE);
@@ -434,33 +444,51 @@ root4->right2 = createNode(
                     }
                     if(timer<=0.0333)
                         goto skipQusetion;
-
-                    if (ok == true) {
-                        if (IsKeyDown(KEY_T)) {
+                     
+                    if (ok == true) 
+                    {
+                        if (IsKeyDown(KEY_T)) 
+                        {
                             truePressed = true;
-                        } else if (IsKeyDown(KEY_F)) {
+                            StopSound(timer_sound);
+                        } 
+                        else if (IsKeyDown(KEY_F)) 
+                        {
                             falsePressed = true;
+                            StopSound(timer_sound);
                         }
-                        if (truePressed == true) {
-                            if (currentVarianta->valid == 1) {
+                        if (truePressed == true) 
+                        {
+                            if (currentVarianta->valid == 1) 
+                            {
+                                if(!IsSoundPlaying(correct))
+                                    PlaySound(correct);
                                 DrawText("Correct!", padding2, padding2 + fontSize2 * 10+200, fontSize2, RAYWHITE);
                                 put = true;
-                            } else {
-
+                            } 
+                            else
+                            {
+                                if(!IsSoundPlaying(wrong))
+                                    PlaySound(wrong);
                                 DrawText("Incorrect!", padding2, padding2 + fontSize2 * 10+200, fontSize2, RAYWHITE);
-
                             }
 
                             DrawText("Press (x) to continue game", padding2, padding2 + fontSize2 * 11+200, fontSize2,
                                      RAYWHITE);
-                        } else if (falsePressed == true) {
-                            if (currentVarianta->valid == 0) {
-
+                        } 
+                        else if (falsePressed == true) 
+                        {
+                            if (currentVarianta->valid == 0) 
+                            {
+                                if(!IsSoundPlaying(correct))
+                                    PlaySound(correct);
                                 DrawText("Correct!", padding2, padding2 + fontSize2 * 10+200, fontSize2, RAYWHITE);
                                 put = true;
-
-                            } else {
-
+                            } 
+                            else 
+                            {
+                                if(!IsSoundPlaying(wrong))
+                                    PlaySound(wrong);
                                 DrawText("Incorrect!", padding2, padding2 + fontSize2 * 10+200, fontSize2, RAYWHITE);
 
                             }
@@ -470,8 +498,8 @@ root4->right2 = createNode(
                         }
                     }
 
-                        if (IsKeyDown(KEY_X)) {
-
+                        if (IsKeyDown(KEY_X))
+                        {
                             goto Continu;
                         }
 
@@ -498,7 +526,7 @@ root4->right2 = createNode(
             }
             Continu:
             skipQusetion:
-
+            
 
             if (IndexIsValid(cellIndexX, cellIndexY) == true && grid[cellIndexX][cellIndexY].flagged == false && put==true)
             {
