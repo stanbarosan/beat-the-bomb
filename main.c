@@ -237,9 +237,9 @@ int main()
             }
             if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT) && mousePosition.x >= 236 && mousePosition.x <= 568 && mousePosition.y >= 432 && mousePosition.y <= 520) {
                 PlaySound(click);
-                image_scale = 0.54;
-                COLS = 15;
-                ROWS = 15;
+                image_scale = 0.5;
+                COLS = 16;
+                ROWS = 16;
                 numberOfMines =28;
                 isOptionsMenuOpen = false;
             }
