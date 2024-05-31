@@ -1,9 +1,5 @@
 #include <stdlib.h>
-#include <time.h>
-#include <stdio.h>
 #include "raylib.h"
-#include <string.h>
-#include <unistd.h>
 
 int COLS,ROWS;
 
