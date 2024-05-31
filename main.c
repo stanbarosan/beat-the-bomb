@@ -120,7 +120,6 @@ int main()
     srand((unsigned)time(NULL));
 
     StartNewGame:
-    //SeekMusicStream(music,music_time);
     // Start Menu
     image_scale=0.08;
     COLS=10;
@@ -133,13 +132,14 @@ int main()
 
     bool start = false;
     bool isOptionsMenuOpen = false;
+    bool isHelpOpen = false;
     while (start != true) 
     {
         UpdateMusicStream(music);
 
         BeginDrawing();
-        if (isOptionsMenuOpen == false) {
-            DrawTextureEx(startMenu, (Vector2) {0, 0}, 0, 0.192f, WHITE);
+        if (isOptionsMenuOpen == false && isHelpOpen == false) {
+            DrawTextureEx(startMenu, (Vector2) {0, 0}, 0, 0.8f, WHITE);
         }
         // Play Game (Start)
         if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && isOptionsMenuOpen == false)
@@ -153,7 +153,7 @@ int main()
         }
 
         // Quit Game
-        if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && isOptionsMenuOpen == false)
+        if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && isOptionsMenuOpen == false && isHelpOpen == false)
         {
             Vector2 mousePosition = GetMousePosition();
             if (mousePosition.x >= 220 && mousePosition.x <= 589 && mousePosition.y >= 484 && mousePosition.y <= 583) 
@@ -162,13 +162,30 @@ int main()
                 goto QuitGame;
             }
         }
+        //help page
+        if(isHelpOpen==true)
+        {
+            DrawTextureEx(helpMenu, (Vector2){0,0},0,0.8,WHITE);
+            if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
+            {
+                Vector2 mousePosition=GetMousePosition();
+                if(mousePosition.x >=53 && mousePosition.x <=253 && mousePosition.y >=717 && mousePosition.y <=767 )
+                {
+                    PlaySound(click);
+                    isHelpOpen=false;
+                }
+            }
+            
+        }
+
+
 
         // Options Menu (Difficulties)
         clock_t last_action_time = 0;
         const clock_t cooldown = CLOCKS_PER_SEC; // Un cooldown de o secundă
 
 
-        if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT) && isOptionsMenuOpen == false)
+        if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT) && isOptionsMenuOpen == false && isHelpOpen==false)
         {
             Vector2 mousePosition = GetMousePosition();
             if(mousePosition.x >= 220 && mousePosition.x <= 589 && mousePosition.y >= 351 && mousePosition.y <= 449)
@@ -179,12 +196,23 @@ int main()
             }
 
         }
+        
+        if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT) && isOptionsMenuOpen == false)
+        {
+            Vector2 mousePosition = GetMousePosition();
+            if(mousePosition.x >= 220 && mousePosition.x <= 589 && mousePosition.y >= 640 && mousePosition.y <= 740)
+            {
+                PlaySound(click);
+                isHelpOpen = true;
+            }
+
+        }
 
 
         if (isOptionsMenuOpen == true )
         {
             Vector2 mousePosition = GetMousePosition();
-            DrawTextureEx(difficultyMenu, (Vector2) {0, 0}, 0, 0.192f, WHITE);
+            DrawTextureEx(difficultyMenu, (Vector2) {0, 0}, 0, 0.8f, WHITE);
             if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && mousePosition.x >= 236 && mousePosition.x <= 568 && mousePosition.y >= 209 && mousePosition.y <= 298) 
             {
                 PlaySound(click);
@@ -449,7 +477,7 @@ root4->right2 = createNode(
                     
                     BeginDrawing();
                     //DrawRectangle(0,200,800,400,BLACK);
-                    DrawTextureEx(questionBackground, (Vector2){0,0} ,0 ,0.2 ,WHITE);
+                    DrawTextureEx(questionBackground, (Vector2){0,0} ,0 ,0.8 ,WHITE);
                     
                     DrawText(TextFormat("Timer: %.2f", timer), padding2, 220, fontSize2, RAYWHITE);
                     DrawText(currentQuestion->intrebare, padding2, padding2 + fontSize2+250, fontSize2, RAYWHITE);
