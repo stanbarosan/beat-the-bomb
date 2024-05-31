@@ -142,7 +142,7 @@ int main()
             DrawTextureEx(startMenu, (Vector2) {0, 0}, 0, 0.8f, WHITE);
         }
         // Play Game (Start)
-        if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && isOptionsMenuOpen == false)
+        if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && isOptionsMenuOpen == false && isHelpOpen == false)
         {
             Vector2 mousePosition = GetMousePosition();
             if (mousePosition.x >= 217 && mousePosition.x <= 588 && mousePosition.y >= 220 && mousePosition.y <= 318) 
@@ -162,6 +162,32 @@ int main()
                 goto QuitGame;
             }
         }
+        
+        
+        if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT) && isOptionsMenuOpen == false && isHelpOpen==false)
+        {
+            Vector2 mousePosition = GetMousePosition();
+            if(mousePosition.x >= 220 && mousePosition.x <= 589 && mousePosition.y >= 351 && mousePosition.y <= 449)
+            {
+                PlaySound(click);
+                isOptionsMenuOpen = true;
+                SetMousePosition(mousePosition.x,408);
+            }
+
+        }
+        
+        if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT) && isOptionsMenuOpen == false)
+        {
+            Vector2 mousePosition = GetMousePosition();
+            if(mousePosition.x >= 220 && mousePosition.x <= 589 && mousePosition.y >= 610 && mousePosition.y <= 705)
+            {
+                PlaySound(click);
+                isHelpOpen = true;
+            }
+
+        }
+        
+        
         //help page
         if(isHelpOpen==true)
         {
@@ -181,32 +207,10 @@ int main()
 
 
         // Options Menu (Difficulties)
-        clock_t last_action_time = 0;
-        const clock_t cooldown = CLOCKS_PER_SEC; // Un cooldown de o secundă
 
 
-        if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT) && isOptionsMenuOpen == false && isHelpOpen==false)
-        {
-            Vector2 mousePosition = GetMousePosition();
-            if(mousePosition.x >= 220 && mousePosition.x <= 589 && mousePosition.y >= 351 && mousePosition.y <= 449)
-            {
-                PlaySound(click);
-                isOptionsMenuOpen = true;
-                SetMousePosition(mousePosition.x,408);
-            }
 
-        }
-        
-        if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT) && isOptionsMenuOpen == false)
-        {
-            Vector2 mousePosition = GetMousePosition();
-            if(mousePosition.x >= 220 && mousePosition.x <= 589 && mousePosition.y >= 640 && mousePosition.y <= 740)
-            {
-                PlaySound(click);
-                isHelpOpen = true;
-            }
 
-        }
 
 
         if (isOptionsMenuOpen == true )
