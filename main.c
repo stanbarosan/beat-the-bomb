@@ -121,7 +121,7 @@ int main()
 
     StartNewGame:
     // Start Menu
-    image_scale=0.08;
+    image_scale=0.8;
     COLS=10;
     ROWS=10;
     int numberOfMines = 10;
@@ -220,7 +220,7 @@ int main()
             if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && mousePosition.x >= 236 && mousePosition.x <= 568 && mousePosition.y >= 209 && mousePosition.y <= 298) 
             {
                 PlaySound(click);
-                image_scale = 0.16;
+                image_scale = 1.6;
                 COLS = 5;
                 ROWS = 5;
 
@@ -229,7 +229,7 @@ int main()
             }
             if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT) && mousePosition.x >= 236 && mousePosition.x <= 568 && mousePosition.y >= 319 && mousePosition.y <= 407) {
                 PlaySound(click);
-                image_scale = 0.08;
+                image_scale = 0.8;
                 COLS = 10;
                 ROWS = 10;
                 numberOfMines = 12;
@@ -237,7 +237,7 @@ int main()
             }
             if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT) && mousePosition.x >= 236 && mousePosition.x <= 568 && mousePosition.y >= 432 && mousePosition.y <= 520) {
                 PlaySound(click);
-                image_scale = 0.053;
+                image_scale = 0.54;
                 COLS = 15;
                 ROWS = 15;
                 numberOfMines =28;
@@ -245,15 +245,15 @@ int main()
             }
             if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && mousePosition.x >= 236 && mousePosition.x <= 568 && mousePosition.y >= 543 && mousePosition.y <= 633) {
                 PlaySound(click);
-                image_scale = 0.04;
+                image_scale = 0.4;
                 COLS = 20;
                 ROWS = 20;
                 numberOfMines = 58;
                 isOptionsMenuOpen = false;
             }
-            if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && mousePosition.x >= 236 && mousePosition.x <= 568 && mousePosition.y >= 651 && mousePosition.y <= 742) {
+            if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT) && mousePosition.x >= 236 && mousePosition.x <= 568 && mousePosition.y >= 651 && mousePosition.y <= 742) {
                 PlaySound(click);
-                image_scale=0.03;
+                image_scale=0.31;
                 COLS=25;
                 ROWS=25;
                 numberOfMines =99;
