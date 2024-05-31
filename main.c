@@ -102,6 +102,8 @@ int main()
     Texture2D difficultyMenu = LoadTexture("textures\\difficulty.png");
     Texture2D youLoseMenu = LoadTexture("textures\\youlosemenu.png");
     Texture2D youWinMenu = LoadTexture("textures\\youwinmenu.png");
+    Texture2D helpMenu = LoadTexture("textures\\help.png");
+    Texture2D questionBackground = LoadTexture("textures\\question.png");
     
     Sound timer_sound = LoadSound("sounds\\timer.mp3");
     Sound correct = LoadSound("sounds\\corect.mp3");
@@ -314,7 +316,7 @@ int main()
             int cellIndexX = mousePosition.x / cellsWidth + 1;
             int cellIndexY = mousePosition.y / cellsHeight + 1;
             const int fontSize2 = 20;
-            const int padding2 = 20;
+            const int padding2 = 80;
             bool put=false;
 
 
@@ -446,9 +448,10 @@ root4->right2 = createNode(
                 if (currentVarianta != NULL) { // Desenează întrebarea și opțiunile
                     
                     BeginDrawing();
-                    //ClearBackground(BLACK);
-                    DrawRectangle(0,200,800,400,BLACK);
-                    DrawText(TextFormat("Timer: %.2f", timer), 10, 200, fontSize2, RAYWHITE);
+                    //DrawRectangle(0,200,800,400,BLACK);
+                    DrawTextureEx(questionBackground, (Vector2){0,0} ,0 ,0.2 ,WHITE);
+                    
+                    DrawText(TextFormat("Timer: %.2f", timer), padding2, 220, fontSize2, RAYWHITE);
                     DrawText(currentQuestion->intrebare, padding2, padding2 + fontSize2+250, fontSize2, RAYWHITE);
                     DrawText(currentVarianta->intrebare, padding2, padding2 + fontSize2 * 4+250, fontSize2, RAYWHITE);
 
@@ -705,6 +708,8 @@ root4->right2 = createNode(
     UnloadTexture(difficultyMenu);
     UnloadTexture(youLoseMenu);
     UnloadTexture(youWinMenu);
+    UnloadTexture(questionBackground);
+    UnloadTexture(helpMenu);
     UnloadImage(icon);
     UnloadSound(click);
     UnloadSound(boom);
