@@ -347,6 +347,13 @@ int main()
             Vector2 mousePosition = GetMousePosition();
             int cellIndexX = mousePosition.x / cellsWidth + 1;
             int cellIndexY = mousePosition.y / cellsHeight + 1;
+            
+            if (IndexIsValid(cellIndexX, cellIndexY) == true && grid[cellIndexX][cellIndexY].flagged == true)
+            {
+                grid[cellIndexX][cellIndexY].flagged = false;
+            }
+            else
+            {
             const int fontSize2 = 20;
             const int padding2 = 80;
             bool put=false;
@@ -378,9 +385,9 @@ root2->left1 = createNode(
     "coherent and effective network for protected areas and\n"
     "restoring degraded habitats", 1);
 root2->left2 = createNode(
-    "Enabling a new governance framework to ensure co-responsibility\n"
-    "and co-ownership by all relevant actors including setting up\n"
-    "new financial opportunities", 1);
+    "Enabling a new governance framework to ensure\n"
+    "co-responsibility and co-ownership by all relevant actors\n"
+    "actors including setting up new financial opportunities", 1);
 root2->right1 = createNode(
     "Adopting a global biodiversity agenda, to strengthen the\n"
     "contribution of the EU toward healthy global biodiversity\n"
@@ -582,16 +589,14 @@ root4->right2 = createNode(
             }
             Continu:
             skipQusetion:
+            if(IsSoundPlaying(timer_sound)) StopSound(timer_sound);
             
 
             if (IndexIsValid(cellIndexX, cellIndexY) == true && grid[cellIndexX][cellIndexY].flagged == false && put==true)
             {
                 grid[cellIndexX][cellIndexY].flagged = true;
             }
-            else if (IndexIsValid(cellIndexX, cellIndexY) == true && grid[cellIndexX][cellIndexY].flagged == true && put==true)
-            {
-                grid[cellIndexX][cellIndexY].flagged = false;
-            }
+          }  
         }
         // Grids Draw
         BeginDrawing();
@@ -674,14 +679,14 @@ root4->right2 = createNode(
         // win
         if (flaggedBombsCount == numberOfMines && allSafeCellsRevealed == true)
         {
-            DrawTextureEx(youWinMenu, (Vector2){0, 0}, 0, 0.8f, WHITE);
+            DrawTextureEx(youWinMenu, (Vector2){0, 202}, 0, 1, WHITE);
             Vector2 mousePosition=GetMousePosition();
 
-            if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && mousePosition.x >= 487 && mousePosition.x <= 672 && mousePosition.y >= 551 && mousePosition.y <= 646)
+            if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && mousePosition.x >= 487 && mousePosition.x <= 672 && mousePosition.y >= 473 && mousePosition.y <= 524)
             {
                 goto QuitGame;
             }
-            if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT) && mousePosition.x >= 131 && mousePosition.x <= 320 && mousePosition.y >= 551 && mousePosition.y <= 646)
+            if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT) && mousePosition.x >= 131 && mousePosition.x <= 320 && mousePosition.y >= 473 && mousePosition.y <= 524)
             {
                 music_time = GetMusicTimePlayed(music);
                 goto StartNewGame;
@@ -702,14 +707,14 @@ root4->right2 = createNode(
             reveal_countdown=reveal_countdown-0.03333;
             else
             {
-               DrawTextureEx(youLoseMenu, (Vector2){0, 0}, 0, 0.8f, WHITE);
+               DrawTextureEx(youLoseMenu, (Vector2){0, 202}, 0, 1, WHITE);
             Vector2 mousePosition=GetMousePosition();
 
-            if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && mousePosition.x >= 487 && mousePosition.x <= 672 && mousePosition.y >= 551 && mousePosition.y <= 646)
+            if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && mousePosition.x >= 487 && mousePosition.x <= 672 && mousePosition.y >= 473 && mousePosition.y <= 524)
             {
                 goto QuitGame;
             }
-            if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT) && mousePosition.x >= 131 && mousePosition.x <= 320 && mousePosition.y >= 551 && mousePosition.y <= 646)
+            if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT) && mousePosition.x >= 131 && mousePosition.x <= 320 && mousePosition.y >= 473 && mousePosition.y <= 524)
             {
                 goto StartNewGame;
             } 
