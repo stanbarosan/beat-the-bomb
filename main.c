@@ -188,6 +188,8 @@ int main()
         if(isHelpOpen==true)
         {
             DrawTextureEx(helpMenu, (Vector2){0,0},0,0.8,WHITE);
+            DrawText("Welcome to Beat The Bomb! \n1. Left-click to reveal a square.\n2. Right-click to place a flag, but you must answer a true or\nfalse question first.\n3. Answer the question correctly to place the flag.\n4. If you answer incorrectly, no flag will be placed.\n5. Continue playing until all mines are flagged or all safe \nsquares are revealed.\n6. Have fun and stay sharp!\nGood luck!",80,250,20,WHITE);
+            DrawText("\n\nEU Programme Erasmus+\nProject title: Gender, Digitalization, Green: Ensuring a\nSustainable Future for all in Europe\nProject No: 2023-1-RO01- KA220-HED-000154433\nStudents:\n->Stan Alexandru-Stefan stanstefan907@gmail.com\n->Cora Serban-Mihail serban.cora@yahoo.com\n->Soare Tiberiu Ionut @@@@@\n->Chiujdea Mihaela @@@@@\n->Corodeanu Andrei-Calin @@@@\n->Smaranda Bogdan @@@@\nTeachers: Prof M. Caramihai & D Chis",80,400,20,BLUE);
             if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
             {
                 Vector2 mousePosition=GetMousePosition();
